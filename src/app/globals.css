@@ -150,7 +150,13 @@ code, pre, .font-mono {
    LCARS Animations
    ============================================ */
 
-/* Boot sequence — panels fade in with scan-line wipe */
+/* 1. Boot wipe — panels slide in from edges on load */
+@keyframes lcars-boot-wipe {
+  from { clip-path: inset(0 100% 0 0); opacity: 0; }
+  to { clip-path: inset(0 0% 0 0); opacity: 1; }
+}
+
+/* Legacy boot (same as wipe but with mid-step) */
 @keyframes lcars-boot {
   0% {
     opacity: 0;
@@ -166,33 +172,34 @@ code, pre, .font-mono {
   }
 }
 
-.lcars-boot-1 { animation: lcars-boot 0.6s ease-out 0.1s both; }
-.lcars-boot-2 { animation: lcars-boot 0.6s ease-out 0.3s both; }
-.lcars-boot-3 { animation: lcars-boot 0.6s ease-out 0.5s both; }
-.lcars-boot-4 { animation: lcars-boot 0.6s ease-out 0.7s both; }
-.lcars-boot-5 { animation: lcars-boot 0.6s ease-out 0.9s both; }
+/* Staggered boot delays: 0ms, 100ms, 200ms, 300ms */
+.lcars-boot-1 { animation: lcars-boot-wipe 0.5s ease-out 0ms both; }
+.lcars-boot-2 { animation: lcars-boot-wipe 0.5s ease-out 100ms both; }
+.lcars-boot-3 { animation: lcars-boot-wipe 0.5s ease-out 200ms both; }
+.lcars-boot-4 { animation: lcars-boot-wipe 0.5s ease-out 300ms both; }
+.lcars-boot-5 { animation: lcars-boot-wipe 0.5s ease-out 400ms both; }
 
-/* Blinking status dot */
+/* 2. Status blink — for online indicators */
+@keyframes lcars-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
 @keyframes lcars-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
 
 .lcars-blink {
-  animation: lcars-pulse 1.5s ease-in-out infinite;
+  animation: lcars-blink 1.5s ease-in-out infinite;
 }
 
-/* Alert flash — red pulse */
-@keyframes lcars-alert {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+/* 3. Data scroll — hex numbers scrolling upward */
+@keyframes lcars-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 
-.lcars-alert {
-  animation: lcars-alert 0.8s ease-in-out infinite;
-}
-
-/* Data stream — scrolling hex ticker */
 @keyframes lcars-datastream {
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
@@ -202,15 +209,60 @@ code, pre, .font-mono {
   animation: lcars-datastream 20s linear infinite;
 }
 
-/* Button hover sweep — left-to-right background fill */
-@keyframes lcars-sweep {
-  0% { background-position: -100% 0; }
-  100% { background-position: 100% 0; }
+.lcars-scroll {
+  animation: lcars-scroll 15s linear infinite;
 }
 
-/* Progress bar segment fill */
+/* 4. Segment fill — LCARS progress bar fill */
+@keyframes lcars-fill {
+  from { width: 0; }
+  to { width: var(--fill-width, 100%); }
+}
+
 @keyframes lcars-progress-fill {
   0% { width: 0; }
+}
+
+.lcars-animate-fill {
+  animation: lcars-fill 1s ease-out 0.5s both;
+}
+
+/* 5. Alert pulse — for warnings/errors */
+@keyframes lcars-alert {
+  0%, 100% { background-color: var(--lcars-rust); }
+  50% { background-color: var(--lcars-red); }
+}
+
+.lcars-alert {
+  animation: lcars-alert 0.8s ease-in-out infinite;
+}
+
+/* Alert flash opacity version for inline elements */
+@keyframes lcars-alert-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.lcars-alert-flash {
+  animation: lcars-alert-flash 0.8s ease-in-out infinite;
+}
+
+/* 6. Button sweep — hover effect left to right */
+@keyframes lcars-sweep {
+  from { background-position: right; }
+  to { background-position: left; }
+}
+
+.lcars-btn-sweep {
+  background-size: 200% 100%;
+  background-image: linear-gradient(90deg, var(--lcars-amber) 50%, transparent 50%);
+  background-position: right;
+  transition: background-position 0.4s ease;
+}
+
+.lcars-btn-sweep:hover {
+  background-position: left;
+  color: var(--lcars-black);
 }
 
 /* Fade in from left */
@@ -225,11 +277,35 @@ code, pre, .font-mono {
   }
 }
 
+/* Fade in from bottom */
+@keyframes lcars-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Glow pulse for active elements */
 @keyframes lcars-glow {
   0%, 100% { box-shadow: 0 0 4px rgba(255, 153, 0, 0.2); }
   50% { box-shadow: 0 0 16px rgba(255, 153, 0, 0.4); }
 }
+
+.lcars-glow {
+  animation: lcars-glow 2s ease-in-out infinite;
+}
+
+/* Staggered animation delays for child elements */
+.lcars-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.lcars-stagger > *:nth-child(2) { animation-delay: 100ms; }
+.lcars-stagger > *:nth-child(3) { animation-delay: 200ms; }
+.lcars-stagger > *:nth-child(4) { animation-delay: 300ms; }
+.lcars-stagger > *:nth-child(5) { animation-delay: 400ms; }
+.lcars-stagger > *:nth-child(6) { animation-delay: 500ms; }
 
 /* ============================================
    LCARS Core Components
@@ -526,7 +602,21 @@ code, pre, .font-mono {
 
 .lcars-progress-segment.filled {
   background-color: var(--lcars-amber);
+  animation: lcars-slide-up 0.3s ease-out both;
 }
+
+.lcars-progress-segment.filled:nth-child(1) { animation-delay: 0.5s; }
+.lcars-progress-segment.filled:nth-child(2) { animation-delay: 0.55s; }
+.lcars-progress-segment.filled:nth-child(3) { animation-delay: 0.6s; }
+.lcars-progress-segment.filled:nth-child(4) { animation-delay: 0.65s; }
+.lcars-progress-segment.filled:nth-child(5) { animation-delay: 0.7s; }
+.lcars-progress-segment.filled:nth-child(6) { animation-delay: 0.75s; }
+.lcars-progress-segment.filled:nth-child(7) { animation-delay: 0.8s; }
+.lcars-progress-segment.filled:nth-child(8) { animation-delay: 0.85s; }
+.lcars-progress-segment.filled:nth-child(9) { animation-delay: 0.9s; }
+.lcars-progress-segment.filled:nth-child(10) { animation-delay: 0.95s; }
+.lcars-progress-segment.filled:nth-child(11) { animation-delay: 1.0s; }
+.lcars-progress-segment.filled:nth-child(12) { animation-delay: 1.05s; }
 
 .lcars-progress-segment.filled-blue {
   background-color: var(--lcars-blue);
@@ -1082,6 +1172,25 @@ code, pre, .font-mono {
    Responsive — hide sidebars on mobile
    ============================================ */
 
+/* Medium screens — hide status panel, compact nav */
+@media (max-width: 1200px) {
+  .lcars-status-panel {
+    display: none;
+  }
+  .lcars-nav {
+    width: 60px;
+  }
+  .lcars-nav .lcars-nav-item span:last-child {
+    display: none;
+  }
+  .lcars-nav .lcars-nav-item {
+    justify-content: center;
+    padding: 8px;
+    margin: 1px 4px;
+  }
+}
+
+/* Small screens — hide everything */
 @media (max-width: 768px) {
   .lcars-nav {
     display: none;
