@@ -289,13 +289,15 @@ code, pre, .font-mono {
 .lcars-elbow {
   position: relative;
   width: 200px;
-  height: 80px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .lcars-elbow-top {
+  height: 80px;
   background-color: var(--lcars-amber);
-  border-radius: 0 0 var(--lcars-radius) 0;
+  border-radius: 0 0 50px 0;
+  position: relative;
 }
 
 .lcars-elbow-top::after {
@@ -305,13 +307,15 @@ code, pre, .font-mono {
   right: 0;
   width: calc(100% - 40px);
   height: calc(100% - 40px);
-  background-color: var(--lcars-bg);
-  border-radius: 0 var(--lcars-radius) 0 0;
+  background-color: var(--lcars-black);
+  border-radius: 0 50px 0 0;
 }
 
 .lcars-elbow-bottom {
+  height: 60px;
   background-color: var(--lcars-blue-dark);
-  border-radius: 0 var(--lcars-radius) 0 0;
+  border-radius: 0 50px 0 0;
+  position: relative;
 }
 
 .lcars-elbow-bottom::after {
@@ -321,8 +325,55 @@ code, pre, .font-mono {
   right: 0;
   width: calc(100% - 40px);
   height: calc(100% - 40px);
-  background-color: var(--lcars-bg);
-  border-radius: 0 0 0 var(--lcars-radius);
+  background-color: var(--lcars-black);
+  border-radius: 0 0 0 50px;
+}
+
+/* Nav color separator lines between bar segments */
+.lcars-nav-separator {
+  height: 2px;
+  background-color: var(--lcars-black);
+  flex-shrink: 0;
+}
+
+/* LCARS Section Header — panel content section headers */
+.lcars-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.lcars-section-header-bar {
+  width: 6px;
+  height: 100%;
+  min-height: 24px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.lcars-section-header-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lcars-amber);
+  flex: 1;
+}
+
+.lcars-section-header-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.lcars-section-header-rule {
+  height: 1px;
+  background-color: var(--lcars-amber);
+  opacity: 0.3;
+  margin-top: 8px;
 }
 
 /* Nav Rail */
@@ -338,13 +389,13 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 16px;
-  margin: 2px 8px;
+  padding: 7px 14px;
+  margin: 1px 6px;
   border-radius: 20px;
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--lcars-text-dim);
   cursor: pointer;
@@ -352,14 +403,15 @@ code, pre, .font-mono {
   overflow: hidden;
   background: transparent;
   text-decoration: none;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  border-left: 3px solid transparent;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .lcars-nav-item::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--lcars-amber), var(--lcars-amber));
+  background: linear-gradient(90deg, var(--lcars-amber) 0%, rgba(255,153,0,0.7) 100%);
   opacity: 0;
   transition: opacity 0.25s ease;
   border-radius: 20px;
@@ -367,11 +419,12 @@ code, pre, .font-mono {
 }
 
 .lcars-nav-item:hover {
-  color: var(--lcars-black);
+  color: var(--lcars-amber);
+  border-left-color: var(--lcars-amber);
 }
 
 .lcars-nav-item:hover::before {
-  opacity: 1;
+  opacity: 0;
 }
 
 .lcars-nav-item > * {
@@ -380,12 +433,18 @@ code, pre, .font-mono {
 }
 
 .lcars-nav-item.active {
-  background-color: var(--lcars-rust);
-  color: var(--lcars-white);
+  background-color: var(--lcars-amber);
+  color: var(--lcars-black);
+  border-left-color: transparent;
+  font-weight: 700;
 }
 
 .lcars-nav-item.active::before {
   display: none;
+}
+
+.lcars-nav-item.active .lcars-nav-dot {
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
 }
 
 .lcars-nav-dot {
@@ -528,17 +587,41 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--lcars-amber);
+  border-bottom-style: solid;
+  position: relative;
 }
+
+.lcars-card-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+}
+
+.lcars-card-blue .lcars-card-header::before { background-color: var(--lcars-blue); }
+.lcars-card-purple .lcars-card-header::before { background-color: var(--lcars-purple); }
+.lcars-card-green .lcars-card-header::before { background-color: var(--lcars-green); }
+.lcars-card-rust .lcars-card-header::before { background-color: var(--lcars-rust); }
+.lcars-card .lcars-card-header::before { background-color: var(--lcars-amber); }
 
 .lcars-card-title {
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--lcars-text);
+  color: var(--lcars-amber);
+}
+
+.lcars-card-header-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--lcars-green);
 }
 
 .lcars-card-body {
