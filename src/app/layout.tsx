@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Sora, JetBrains_Mono } from "next/font/google";
+import { Antonio, Space_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ 
+const antonio = Antonio({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-antonio",
+  weight: ["400", "500", "600", "700"],
 });
 
-const sora = Sora({ 
+const spaceMono = Space_Mono({
   subsets: ["latin"],
-  variable: "--font-sora",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-space-mono",
+  weight: ["400", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -19,10 +20,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mission Control - OpenClaw",
-  description: "Your OpenClaw agent dashboard",
+  title: "Scotty Command Bridge — OpenClaw",
+  description: "LCARS Mission Control for OpenClaw agents",
   manifest: "/manifest.json",
-  themeColor: "#1a1a2e",
+  themeColor: "#0a0e1a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -42,12 +43,16 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{__html:`if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js")`}} />
       </head>
-      <body 
-        className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable} font-sans`}
-        style={{ 
-          backgroundColor: 'var(--background)', 
-          color: 'var(--foreground)',
-          fontFamily: 'var(--font-body)'
+      <body
+        className={`${antonio.variable} ${spaceMono.variable} ${jetbrainsMono.variable}`}
+        style={{
+          backgroundColor: '#000000',
+          color: 'var(--lcars-text)',
+          fontFamily: 'var(--font-body)',
+          margin: 0,
+          padding: 0,
+          overflow: 'hidden',
+          height: '100vh',
         }}
       >
         {children}

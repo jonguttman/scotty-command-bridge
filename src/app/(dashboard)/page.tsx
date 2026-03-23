@@ -1,26 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { StatsCard } from "@/components/StatsCard";
 import { ActivityFeed } from "@/components/ActivityFeed";
-import { WeatherWidget } from "@/components/WeatherWidget";
-import { Notepad } from "@/components/Notepad";
-import {
-  Activity,
-  CheckCircle,
-  XCircle,
-  Calendar,
-  Circle,
-  Bot,
-  MessageSquare,
-  Users,
-  Gamepad2,
-  Brain,
-  Puzzle,
-  Zap,
-  Server,
-  Terminal,
-} from "lucide-react";
 import Link from "next/link";
 
 interface Stats {
@@ -42,273 +23,429 @@ interface Agent {
   botToken?: string;
 }
 
-export default function DashboardPage() {
-  const [stats, setStats] = useState<Stats>({ total: 0, today: 0, success: 0, error: 0, byType: {} });
+function LCARSStat({
+  label,
+  value,
+  variant = "amber",
+}: {
+  label: string;
+  value: string;
+  variant?: "amber" | "blue" | "green" | "red" | "purple";
+}) {
+  return (
+    <div className={`lcars-stat lcars-stat-${variant}`}>
+      <div className="lcars-stat-label">{label}</div>
+      <div className="lcars-stat-value">{value}</div>
+    </div>
+  );
+}
+
+function LCARSProgressBar({
+  label,
+  value,
+  max,
+  color = "amber",
+}: {
+  label: string;
+  value: number;
+  max: number;
+  color?: string;
+}) {
+  const segments = 10;
+  const filled = max > 0 ? Math.round((value / max) * segments) : 0;
+
+  return (
+    <div style={{ marginBottom: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "4px",
+        }}
+      >
+        <span className="lcars-status-label">{label}</span>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "11px",
+            color: `var(--lcars-${color})`,
+          }}
+        >
+          {value}
+        </span>
+      </div>
+      <div className="lcars-progress">
+        {Array.from({ length: segments }).map((_, i) => (
+          <div
+            key={i}
+            className={`lcars-progress-segment ${i < filled ? `filled` : ""}`}
+            style={
+              i < filled
+                ? { backgroundColor: `var(--lcars-${color})` }
+                : undefined
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function BridgePage() {
+  const [stats, setStats] = useState<Stats>({
+    total: 0,
+    today: 0,
+    success: 0,
+    error: 0,
+    byType: {},
+  });
   const [agents, setAgents] = useState<Agent[]>([]);
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/activities/stats").then(r => r.json()),
-      fetch("/api/agents").then(r => r.json()),
-    ]).then(([actStats, agentsData]) => {
-      setStats({
-        total: actStats.total || 0,
-        today: actStats.today || 0,
-        success: actStats.byStatus?.success || 0,
-        error: actStats.byStatus?.error || 0,
-        byType: actStats.byType || {},
-      });
-      setAgents(agentsData.agents || []);
-    }).catch(console.error);
+      fetch("/api/activities/stats").then((r) => r.json()),
+      fetch("/api/agents").then((r) => r.json()),
+    ])
+      .then(([actStats, agentsData]) => {
+        setStats({
+          total: actStats.total || 0,
+          today: actStats.today || 0,
+          success: actStats.byStatus?.success || 0,
+          error: actStats.byStatus?.error || 0,
+          byType: actStats.byType || {},
+        });
+        setAgents(agentsData.agents || []);
+      })
+      .catch(console.error);
   }, []);
 
+  const onlineCount = agents.filter((a) => a.status === "online").length;
+
   return (
-    <div className="p-4 md:p-8">
-      {/* Header */}
-      <div className="mb-4 md:mb-6">
-        <h1 
-          className="text-2xl md:text-3xl font-bold mb-1"
-          style={{ 
-            fontFamily: 'var(--font-heading)',
-            color: 'var(--text-primary)',
-            letterSpacing: '-1.5px'
-          }}
-        >
-          🦞 Mission Control
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-          Overview of Tenacitas agent activity
-        </p>
-      </div>
-
-      {/* Stats Grid + Weather */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4 md:mb-6">
-        {/* Stats */}
-        <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatsCard
-            title="Total Activities"
-            value={stats.total.toLocaleString()}
-            icon={<Activity className="w-5 h-5" />}
-            iconColor="var(--info)"
-          />
-          <StatsCard
-            title="Today"
-            value={stats.today.toLocaleString()}
-            icon={<Zap className="w-5 h-5" />}
-            iconColor="var(--accent)"
-          />
-          <StatsCard
-            title="Successful"
-            value={stats.success.toLocaleString()}
-            icon={<CheckCircle className="w-5 h-5" />}
-            iconColor="var(--success)"
-          />
-          <StatsCard
-            title="Errors"
-            value={stats.error.toLocaleString()}
-            icon={<XCircle className="w-5 h-5" />}
-            iconColor="var(--error)"
-          />
-        </div>
-
-        {/* Weather Widget */}
-        <div className="lg:col-span-1">
-          <WeatherWidget />
-        </div>
-      </div>
-
-      {/* Multi-Agent Status */}
-      <div 
-        className="mb-6 rounded-xl overflow-hidden"
+    <div className="lcars-data-bg">
+      {/* Section Title */}
+      <div
         style={{
-          backgroundColor: 'var(--card)',
-          border: '1px solid var(--border)',
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          marginBottom: "24px",
         }}
       >
-        <div 
-          className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid var(--border)' }}
+        <div
+          style={{
+            width: "8px",
+            height: "32px",
+            backgroundColor: "var(--lcars-amber)",
+            borderRadius: "4px",
+          }}
+        />
+        <h2
+          style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "20px",
+            fontWeight: 400,
+            letterSpacing: "0.2em",
+            color: "var(--lcars-text)",
+            textTransform: "uppercase",
+            margin: 0,
+          }}
         >
-          <div className="flex items-center gap-3">
-            <div className="accent-line" />
-            <h2 
-              className="text-base font-semibold"
-              style={{ 
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--text-primary)'
-              }}
-            >
-              <Users className="inline-block w-5 h-5 mr-2 mb-1" />
-              Multi-Agent System
-            </h2>
-          </div>
-          <div className="flex gap-2">
-            <Link
-              href="/office"
-              className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
-              style={{ 
-                backgroundColor: 'var(--accent)',
-                color: 'var(--text-primary)',
-              }}
-            >
-              <Gamepad2 className="inline-block w-4 h-4 mr-1 mb-0.5" />
-              Open Office
-            </Link>
+          Bridge Overview
+        </h2>
+        <div
+          style={{
+            flex: 1,
+            height: "2px",
+            background:
+              "linear-gradient(90deg, var(--lcars-amber), transparent)",
+          }}
+        />
+      </div>
+
+      {/* Stats Grid */}
+      <div
+        className="lcars-boot-5"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "12px",
+          marginBottom: "24px",
+        }}
+      >
+        <LCARSStat
+          label="Total Activities"
+          value={stats.total.toLocaleString()}
+          variant="amber"
+        />
+        <LCARSStat
+          label="Today"
+          value={stats.today.toLocaleString()}
+          variant="blue"
+        />
+        <LCARSStat
+          label="Successful"
+          value={stats.success.toLocaleString()}
+          variant="green"
+        />
+        <LCARSStat
+          label="Errors"
+          value={stats.error.toLocaleString()}
+          variant="red"
+        />
+      </div>
+
+      {/* Two column layout */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px",
+          marginBottom: "24px",
+        }}
+      >
+        {/* Crew Manifest */}
+        <div className="lcars-card lcars-card-blue">
+          <div className="lcars-card-header">
+            <span className="lcars-card-title">Crew Manifest</span>
             <Link
               href="/agents"
-              className="text-sm font-medium"
-              style={{ color: 'var(--accent)' }}
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "11px",
+                letterSpacing: "0.1em",
+                color: "var(--lcars-amber)",
+                textDecoration: "none",
+                textTransform: "uppercase",
+              }}
             >
-              View all →
+              View All →
             </Link>
           </div>
-        </div>
-        <div className="p-5">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {agents.map((agent) => (
+          <div className="lcars-card-body">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "16px",
+              }}
+            >
               <div
-                key={agent.id}
-                className="p-3 rounded-lg transition-all hover:scale-105"
                 style={{
-                  backgroundColor: 'var(--card-elevated)',
-                  border: `2px solid ${agent.color}`,
-                  cursor: 'pointer',
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "36px",
+                  fontWeight: 700,
+                  color: "var(--lcars-amber)",
+                  lineHeight: 1,
                 }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl">{agent.emoji}</div>
-                  <Circle
-                    className="w-2 h-2"
-                    style={{
-                      fill: agent.status === "online" ? "#4ade80" : "#6b7280",
-                      color: agent.status === "online" ? "#4ade80" : "#6b7280",
-                    }}
-                  />
-                </div>
-                <div 
-                  className="text-sm font-bold mb-1"
-                  style={{ 
-                    fontFamily: 'var(--font-heading)',
-                    color: 'var(--text-primary)',
+                {agents.length}
+              </div>
+              <div>
+                <div className="lcars-status-label">Total Agents</div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "12px",
+                    color: "var(--lcars-green)",
+                    marginTop: "2px",
                   }}
                 >
-                  {agent.name}
+                  {onlineCount} online
                 </div>
-                <div 
-                  className="text-xs truncate mb-1"
-                  style={{ color: 'var(--text-muted)' }}
-                  title={agent.model}
-                >
-                  <Bot className="inline-block w-3 h-3 mr-1" />
-                  {agent.model.split('/').pop()}
-                </div>
-                {agent.botToken && (
-                  <div 
-                    className="text-xs mt-1 flex items-center gap-1"
-                    style={{ color: '#0088cc' }}
-                  >
-                    <MessageSquare className="w-3 h-3" />
-                    Connected
-                  </div>
-                )}
               </div>
-            ))}
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+                gap: "8px",
+              }}
+            >
+              {agents.slice(0, 6).map((agent) => (
+                <div
+                  key={agent.id}
+                  style={{
+                    padding: "10px",
+                    backgroundColor: "var(--lcars-bg)",
+                    borderRadius: "8px",
+                    borderLeft: `3px solid ${agent.color || "var(--lcars-amber)"}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    <span style={{ fontSize: "18px" }}>{agent.emoji}</span>
+                    <div
+                      className={agent.status === "online" ? "lcars-blink" : ""}
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor:
+                          agent.status === "online"
+                            ? "var(--lcars-green)"
+                            : "var(--lcars-text-dim)",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-heading)",
+                      fontSize: "12px",
+                      letterSpacing: "0.1em",
+                      color: "var(--lcars-text)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {agent.name}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "9px",
+                      color: "var(--lcars-text-dim)",
+                      marginTop: "2px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {agent.model.split("/").pop()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Activity Distribution */}
+        <div className="lcars-card lcars-card-purple">
+          <div className="lcars-card-header">
+            <span className="lcars-card-title">System Analysis</span>
+          </div>
+          <div className="lcars-card-body">
+            <LCARSProgressBar
+              label="Messages"
+              value={stats.byType?.message || 0}
+              max={stats.total || 1}
+              color="green"
+            />
+            <LCARSProgressBar
+              label="Commands"
+              value={stats.byType?.command || 0}
+              max={stats.total || 1}
+              color="purple"
+            />
+            <LCARSProgressBar
+              label="File Ops"
+              value={(stats.byType?.file_read || 0) + (stats.byType?.file_write || 0) + (stats.byType?.file || 0)}
+              max={stats.total || 1}
+              color="blue"
+            />
+            <LCARSProgressBar
+              label="Cron"
+              value={stats.byType?.cron_run || stats.byType?.cron || 0}
+              max={stats.total || 1}
+              color="rust"
+            />
+            <LCARSProgressBar
+              label="Search"
+              value={stats.byType?.search || 0}
+              max={stats.total || 1}
+              color="amber"
+            />
+            <LCARSProgressBar
+              label="Security"
+              value={stats.byType?.security || 0}
+              max={stats.total || 1}
+              color="red"
+            />
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* Activity Feed */}
-        <div 
-          className="lg:col-span-2 rounded-xl overflow-hidden"
-          style={{
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
-          }}
-        >
-          <div 
-            className="flex items-center justify-between px-5 py-4"
-            style={{ borderBottom: '1px solid var(--border)' }}
+      {/* Activity Feed */}
+      <div className="lcars-card" style={{ marginBottom: "20px" }}>
+        <div className="lcars-card-header">
+          <span className="lcars-card-title">Recent Ship Log</span>
+          <Link
+            href="/activity"
+            style={{
+              fontFamily: "var(--font-heading)",
+              fontSize: "11px",
+              letterSpacing: "0.1em",
+              color: "var(--lcars-amber)",
+              textDecoration: "none",
+              textTransform: "uppercase",
+            }}
           >
-            <div className="flex items-center gap-3">
-              <div className="accent-line" />
-              <h2 
-                className="text-base font-semibold"
-                style={{ 
-                  fontFamily: 'var(--font-heading)',
-                  color: 'var(--text-primary)'
-                }}
-              >
-                Recent Activity
-              </h2>
-            </div>
-            <a
-              href="/activity"
-              className="text-sm font-medium"
-              style={{ color: 'var(--accent)' }}
+            Full Log →
+          </Link>
+        </div>
+        <div>
+          <ActivityFeed limit={6} />
+        </div>
+      </div>
+
+      {/* Quick Nav */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+          gap: "8px",
+        }}
+      >
+        {[
+          { href: "/cron", label: "Cron Jobs", color: "var(--lcars-rust)" },
+          { href: "/system", label: "Engineering", color: "var(--lcars-green)" },
+          { href: "/logs", label: "Comms Log", color: "var(--lcars-blue)" },
+          { href: "/memory", label: "Memory Bank", color: "var(--lcars-purple)" },
+          { href: "/skills", label: "R&D Lab", color: "var(--lcars-amber)" },
+          { href: "/terminal", label: "Console", color: "var(--lcars-blue-dark)" },
+        ].map(({ href, label, color }) => (
+          <Link
+            key={href}
+            href={href}
+            className="lcars-btn-outline"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "12px 16px",
+              borderRadius: "20px",
+              textDecoration: "none",
+              borderColor: color,
+            }}
+          >
+            <div
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                backgroundColor: color,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "12px",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--lcars-text)",
+              }}
             >
-              View all →
-            </a>
-          </div>
-          <div className="p-0">
-            <ActivityFeed limit={5} />
-          </div>
-        </div>
-
-        {/* Quick Links */}
-        <div 
-          className="rounded-xl overflow-hidden"
-          style={{
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
-          }}
-        >
-          <div 
-            className="flex items-center justify-between px-5 py-4"
-            style={{ borderBottom: '1px solid var(--border)' }}
-          >
-            <div className="flex items-center gap-3">
-              <div className="accent-line" />
-              <h2 
-                className="text-base font-semibold"
-                style={{ 
-                  fontFamily: 'var(--font-heading)',
-                  color: 'var(--text-primary)'
-                }}
-              >
-                Quick Links
-              </h2>
-            </div>
-          </div>
-          <div className="p-4 grid grid-cols-2 gap-2">
-            {[
-              { href: "/cron", icon: Calendar, label: "Cron Jobs", color: "#a78bfa" },
-              { href: "/actions", icon: Zap, label: "Quick Actions", color: "var(--accent)" },
-              { href: "/system", icon: Server, label: "System", color: "var(--success)" },
-              { href: "/logs", icon: Terminal, label: "Live Logs", color: "#60a5fa" },
-              { href: "/memory", icon: Brain, label: "Memory", color: "#f59e0b" },
-              { href: "/skills", icon: Puzzle, label: "Skills", color: "#4ade80" },
-            ].map(({ href, icon: Icon, label, color }) => (
-              <Link
-                key={href}
-                href={href}
-                className="p-3 rounded-lg transition-all hover:scale-[1.02]"
-                style={{ backgroundColor: 'var(--card-elevated)', border: '1px solid var(--border)' }}
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className="w-4 h-4" style={{ color }} />
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{label}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Notepad */}
-          <div style={{ margin: "1rem", marginTop: "0.5rem" }}>
-            <Notepad />
-          </div>
-        </div>
+              {label}
+            </span>
+          </Link>
+        ))}
       </div>
     </div>
   );

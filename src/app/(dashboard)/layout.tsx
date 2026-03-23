@@ -1,6 +1,8 @@
 "use client";
 
-import { Dock, TopBar, StatusBar } from "@/components/TenacitOS";
+import { LCARSHeader } from "@/components/LCARSHeader";
+import { LCARSNav } from "@/components/LCARSNav";
+import { LCARSStatusPanel } from "@/components/LCARSStatusPanel";
 
 export default function DashboardLayout({
   children,
@@ -8,23 +10,46 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="tenacios-shell" style={{ minHeight: "100vh" }}>
-      <Dock />
-      <TopBar />
-      
-      <main
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        overflow: "hidden",
+        backgroundColor: "var(--lcars-black)",
+      }}
+    >
+      {/* Top Header Bar */}
+      <LCARSHeader />
+
+      {/* Main body: Nav | Content | Status */}
+      <div
         style={{
-          marginLeft: "68px", // Width of dock
-          marginTop: "48px", // Height of top bar
-          marginBottom: "32px", // Height of status bar
-          minHeight: "calc(100vh - 48px - 32px)",
-          padding: "24px",
+          display: "flex",
+          flex: 1,
+          overflow: "hidden",
         }}
       >
-        {children}
-      </main>
+        {/* Left Nav Rail */}
+        <LCARSNav />
 
-      <StatusBar />
+        {/* Main Content Area */}
+        <main
+          className="lcars-boot-4"
+          style={{
+            flex: 1,
+            overflow: "auto",
+            backgroundColor: "var(--lcars-bg)",
+            padding: "20px",
+            position: "relative",
+          }}
+        >
+          {children}
+        </main>
+
+        {/* Right Status Panel */}
+        <LCARSStatusPanel />
+      </div>
     </div>
   );
 }

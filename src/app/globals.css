@@ -2,154 +2,677 @@
 @plugin "@tailwindcss/typography";
 
 /* ============================================
-   TenacitOS Design System
-   Based on tenacios-design.json (Pencil)
-   Updated: 2026-02-17
+   LCARS Design System — Scotty Command Bridge
+   Inspired by Michael Okuda's LCARS interface
+   from Star Trek: The Next Generation / Picard
    ============================================ */
 
 :root {
-  /* Core Colors */
-  --bg: #0C0C0C;
-  --background: #0C0C0C; /* alias for compatibility */
-  --foreground: #FFFFFF;
-  
-  /* Surface Colors */
-  --surface: #1A1A1A;
-  --surface-elevated: #242424;
-  --surface-hover: #2E2E2E;
-  --card: #1A1A1A; /* alias */
-  --card-elevated: #242424; /* alias */
-  
-  /* Borders */
-  --border: #2A2A2A;
-  --border-strong: #3A3A3A;
-  
-  /* Accent */
-  --accent: #FF3B30;
-  --accent-soft: rgba(255, 59, 48, 0.125);
-  --accent-hover: #FF524A;
-  --accent-muted: rgba(255, 59, 48, 0.1); /* legacy */
-  
-  /* Text Colors */
-  --text-primary: #FFFFFF;
-  --text-secondary: #8A8A8A;
-  --text-muted: #525252;
-  
-  /* Semantic Colors */
-  --positive: #32D74B;
-  --positive-soft: rgba(50, 215, 75, 0.125);
-  --negative: #FF453A;
-  --negative-soft: rgba(255, 69, 58, 0.125);
-  --warning: #FFD60A;
-  --warning-soft: rgba(255, 214, 10, 0.125);
-  --info: #0A84FF;
-  --info-soft: rgba(10, 132, 255, 0.125);
-  
-  /* Legacy aliases */
-  --success: #32D74B;
-  --success-bg: rgba(50, 215, 75, 0.1);
-  --error: #FF453A;
-  --error-bg: rgba(255, 69, 58, 0.1);
-  
+  /* LCARS Core Palette */
+  --lcars-black: #000000;
+  --lcars-bg: #0a0e1a;
+  --lcars-panel: #1a1f2e;
+  --lcars-amber: #ff9900;
+  --lcars-rust: #cc4400;
+  --lcars-blue: #5599ff;
+  --lcars-blue-dark: #3366cc;
+  --lcars-purple: #9966cc;
+  --lcars-green: #00ff88;
+  --lcars-red: #ff3300;
+  --lcars-text: #ccddff;
+  --lcars-text-dim: #6677aa;
+  --lcars-white: #ffffff;
+
+  /* Semantic mapping */
+  --bg: var(--lcars-bg);
+  --background: var(--lcars-bg);
+  --foreground: var(--lcars-text);
+  --surface: var(--lcars-panel);
+  --surface-elevated: #222840;
+  --surface-hover: #2a3050;
+  --card: var(--lcars-panel);
+  --card-elevated: #222840;
+  --border: #2a3355;
+  --border-strong: #3a4566;
+  --accent: var(--lcars-amber);
+  --accent-soft: rgba(255, 153, 0, 0.15);
+  --accent-hover: #ffaa22;
+  --text-primary: var(--lcars-text);
+  --text-secondary: #8899bb;
+  --text-muted: var(--lcars-text-dim);
+  --positive: var(--lcars-green);
+  --positive-soft: rgba(0, 255, 136, 0.12);
+  --negative: var(--lcars-red);
+  --negative-soft: rgba(255, 51, 0, 0.12);
+  --warning: var(--lcars-amber);
+  --warning-soft: rgba(255, 153, 0, 0.12);
+  --info: var(--lcars-blue);
+  --info-soft: rgba(85, 153, 255, 0.12);
+  --success: var(--lcars-green);
+  --error: var(--lcars-red);
+
   /* Activity Type Colors */
-  --type-file: #64D2FF;
-  --type-file-bg: rgba(100, 210, 255, 0.125);
-  --type-search: #FFD60A;
-  --type-search-bg: rgba(255, 214, 10, 0.125);
-  --type-message: #32D74B;
-  --type-message-bg: rgba(50, 215, 75, 0.125);
-  --type-command: #BF5AF2;
-  --type-command-bg: rgba(191, 90, 242, 0.125);
-  --type-cron: #FF375F;
-  --type-cron-bg: rgba(255, 55, 95, 0.125);
-  --type-security: #FF453A;
-  --type-security-bg: rgba(255, 69, 58, 0.125);
-  --type-build: #FF9F0A;
-  --type-build-bg: rgba(255, 159, 10, 0.125);
-  
-  /* Typography - uses Next.js font variables */
-  --font-heading: var(--font-sora), system-ui, sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), monospace;
-  
+  --type-file: var(--lcars-blue);
+  --type-file-bg: rgba(85, 153, 255, 0.12);
+  --type-search: var(--lcars-amber);
+  --type-search-bg: rgba(255, 153, 0, 0.12);
+  --type-message: var(--lcars-green);
+  --type-message-bg: rgba(0, 255, 136, 0.12);
+  --type-command: var(--lcars-purple);
+  --type-command-bg: rgba(153, 102, 204, 0.12);
+  --type-cron: var(--lcars-rust);
+  --type-cron-bg: rgba(204, 68, 0, 0.12);
+  --type-security: var(--lcars-red);
+  --type-security-bg: rgba(255, 51, 0, 0.12);
+  --type-build: var(--lcars-amber);
+  --type-build-bg: rgba(255, 153, 0, 0.12);
+
+  /* Typography */
+  --font-heading: var(--font-antonio), 'Antonio', system-ui, sans-serif;
+  --font-body: var(--font-antonio), 'Antonio', system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), 'Space Mono', monospace;
+
   /* Spacing */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-  
+  --lcars-radius: 24px;
+
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-glow-amber: 0 0 20px rgba(255, 153, 0, 0.15);
+  --shadow-glow-blue: 0 0 20px rgba(85, 153, 255, 0.15);
 }
 
-/* Base Styles */
+/* ============================================
+   Base Styles
+   ============================================ */
+
 body {
-  background-color: var(--bg);
-  color: var(--text-primary);
+  background-color: var(--lcars-black);
+  color: var(--lcars-text);
   font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* Scanline CRT overlay — the classic Trek look */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.04) 2px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+}
+
+/* Custom scrollbar — LCARS themed */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
-  border-radius: 4px;
+  background: var(--lcars-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
-  border-radius: 4px;
+  background: var(--lcars-text-dim);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--lcars-amber);
 }
 
-/* Heading styles */
+/* ============================================
+   Typography
+   ============================================ */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-/* Code/Mono */
 code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Line clamp utility */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+/* ============================================
+   LCARS Animations
+   ============================================ */
+
+/* Boot sequence — panels fade in with scan-line wipe */
+@keyframes lcars-boot {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  60% {
+    opacity: 1;
+    clip-path: inset(0 20% 0 0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.lcars-boot-1 { animation: lcars-boot 0.6s ease-out 0.1s both; }
+.lcars-boot-2 { animation: lcars-boot 0.6s ease-out 0.3s both; }
+.lcars-boot-3 { animation: lcars-boot 0.6s ease-out 0.5s both; }
+.lcars-boot-4 { animation: lcars-boot 0.6s ease-out 0.7s both; }
+.lcars-boot-5 { animation: lcars-boot 0.6s ease-out 0.9s both; }
+
+/* Blinking status dot */
+@keyframes lcars-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.lcars-blink {
+  animation: lcars-pulse 1.5s ease-in-out infinite;
+}
+
+/* Alert flash — red pulse */
+@keyframes lcars-alert {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.lcars-alert {
+  animation: lcars-alert 0.8s ease-in-out infinite;
+}
+
+/* Data stream — scrolling hex ticker */
+@keyframes lcars-datastream {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.lcars-datastream {
+  animation: lcars-datastream 20s linear infinite;
+}
+
+/* Button hover sweep — left-to-right background fill */
+@keyframes lcars-sweep {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+/* Progress bar segment fill */
+@keyframes lcars-progress-fill {
+  0% { width: 0; }
+}
+
+/* Fade in from left */
+@keyframes lcars-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Glow pulse for active elements */
+@keyframes lcars-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 153, 0, 0.2); }
+  50% { box-shadow: 0 0 16px rgba(255, 153, 0, 0.4); }
+}
+
+/* ============================================
+   LCARS Core Components
+   ============================================ */
+
+/* Top Header Bar */
+.lcars-header {
+  height: 64px;
+  display: flex;
+  align-items: stretch;
+  background-color: var(--lcars-bg);
+  position: relative;
+  z-index: 40;
+}
+
+.lcars-header-amber {
+  background: linear-gradient(135deg, var(--lcars-amber) 0%, var(--lcars-rust) 100%);
+  width: 30%;
+  min-width: 200px;
+  border-radius: 0 0 var(--lcars-radius) 0;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+}
+
+.lcars-header-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: var(--lcars-bg);
+}
+
+.lcars-header-cap {
+  width: 120px;
+  background: linear-gradient(135deg, var(--lcars-purple) 0%, var(--lcars-blue-dark) 100%);
+  border-radius: 0 0 0 var(--lcars-radius);
+}
+
+/* Thin rust stripe below header */
+.lcars-header-stripe {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--lcars-rust) 0%,
+    var(--lcars-rust) 30%,
+    var(--lcars-amber) 30%,
+    var(--lcars-amber) 60%,
+    var(--lcars-blue-dark) 60%,
+    var(--lcars-blue-dark) 80%,
+    var(--lcars-purple) 80%
+  );
+}
+
+/* LCARS Elbow Piece — the signature rounded corner connector */
+.lcars-elbow {
+  position: relative;
+  width: 200px;
+  height: 80px;
   overflow: hidden;
 }
 
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+.lcars-elbow-top {
+  background-color: var(--lcars-amber);
+  border-radius: 0 0 var(--lcars-radius) 0;
+}
+
+.lcars-elbow-top::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  background-color: var(--lcars-bg);
+  border-radius: 0 var(--lcars-radius) 0 0;
+}
+
+.lcars-elbow-bottom {
+  background-color: var(--lcars-blue-dark);
+  border-radius: 0 var(--lcars-radius) 0 0;
+}
+
+.lcars-elbow-bottom::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  background-color: var(--lcars-bg);
+  border-radius: 0 0 0 var(--lcars-radius);
+}
+
+/* Nav Rail */
+.lcars-nav {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--lcars-black);
+  padding: 0;
+}
+
+.lcars-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  margin: 2px 8px;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--lcars-text-dim);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.lcars-nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--lcars-amber), var(--lcars-amber));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 20px;
+  z-index: 0;
+}
+
+.lcars-nav-item:hover {
+  color: var(--lcars-black);
+}
+
+.lcars-nav-item:hover::before {
+  opacity: 1;
+}
+
+.lcars-nav-item > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lcars-nav-item.active {
+  background-color: var(--lcars-rust);
+  color: var(--lcars-white);
+}
+
+.lcars-nav-item.active::before {
+  display: none;
+}
+
+.lcars-nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* LCARS Nav sidebar bar — the vertical amber strip */
+.lcars-nav-bar {
+  width: 40px;
+  background-color: var(--lcars-amber);
+  margin: 4px 0;
+  border-radius: 0 20px 20px 0;
+}
+
+.lcars-nav-bar-blue {
+  background-color: var(--lcars-blue-dark);
+}
+
+.lcars-nav-bar-purple {
+  background-color: var(--lcars-purple);
+}
+
+.lcars-nav-bar-rust {
+  background-color: var(--lcars-rust);
+}
+
+/* Right Status Sidebar */
+.lcars-status-panel {
+  width: 220px;
+  background-color: var(--lcars-bg);
+  border-left: 4px solid var(--lcars-blue-dark);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.lcars-status-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--lcars-text-dim);
+}
+
+.lcars-status-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--lcars-amber);
+}
+
+.lcars-status-value-large {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--lcars-amber);
+  line-height: 1;
+}
+
+/* LCARS Progress Bar — segmented blocks */
+.lcars-progress {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  align-items: stretch;
+}
+
+.lcars-progress-segment {
+  flex: 1;
+  border-radius: 2px;
+  background-color: #1a2040;
+  transition: background-color 0.3s ease;
+}
+
+.lcars-progress-segment.filled {
+  background-color: var(--lcars-amber);
+}
+
+.lcars-progress-segment.filled-blue {
+  background-color: var(--lcars-blue);
+}
+
+.lcars-progress-segment.filled-green {
+  background-color: var(--lcars-green);
+}
+
+.lcars-progress-segment.filled-red {
+  background-color: var(--lcars-red);
+}
+
+/* Channel status indicators */
+.lcars-channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.lcars-channel-diamond {
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   LCARS Cards & Panels
+   ============================================ */
+
+.lcars-card {
+  background-color: var(--lcars-panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--lcars-amber);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   overflow: hidden;
 }
 
-/* Smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke, opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+.lcars-card-blue {
+  border-left-color: var(--lcars-blue);
 }
 
-/* Card styles */
+.lcars-card-green {
+  border-left-color: var(--lcars-green);
+}
+
+.lcars-card-purple {
+  border-left-color: var(--lcars-purple);
+}
+
+.lcars-card-rust {
+  border-left-color: var(--lcars-rust);
+}
+
+.lcars-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lcars-card-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--lcars-text);
+}
+
+.lcars-card-body {
+  padding: 16px;
+}
+
+/* ============================================
+   LCARS Buttons
+   ============================================ */
+
+.lcars-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.lcars-btn-amber {
+  background-color: var(--lcars-amber);
+  color: var(--lcars-black);
+}
+
+.lcars-btn-amber:hover {
+  background: linear-gradient(90deg, var(--lcars-amber), #ffbb44);
+  box-shadow: var(--shadow-glow-amber);
+}
+
+.lcars-btn-blue {
+  background-color: var(--lcars-blue);
+  color: var(--lcars-black);
+}
+
+.lcars-btn-rust {
+  background-color: var(--lcars-rust);
+  color: var(--lcars-white);
+}
+
+.lcars-btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--lcars-text-dim);
+  color: var(--lcars-text);
+}
+
+.lcars-btn-outline:hover {
+  border-color: var(--lcars-amber);
+  color: var(--lcars-amber);
+}
+
+/* ============================================
+   Bridge Overview Stats
+   ============================================ */
+
+.lcars-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background-color: var(--lcars-panel);
+  border-left: 3px solid var(--lcars-amber);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.lcars-stat-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--lcars-text-dim);
+}
+
+.lcars-stat-value {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--lcars-amber);
+  line-height: 1;
+}
+
+.lcars-stat-blue .lcars-stat-value { color: var(--lcars-blue); }
+.lcars-stat-blue { border-left-color: var(--lcars-blue); }
+.lcars-stat-green .lcars-stat-value { color: var(--lcars-green); }
+.lcars-stat-green { border-left-color: var(--lcars-green); }
+.lcars-stat-red .lcars-stat-value { color: var(--lcars-red); }
+.lcars-stat-red { border-left-color: var(--lcars-red); }
+.lcars-stat-purple .lcars-stat-value { color: var(--lcars-purple); }
+.lcars-stat-purple { border-left-color: var(--lcars-purple); }
+
+/* ============================================
+   Data Stream Background
+   ============================================ */
+
+.lcars-data-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.lcars-data-bg::before {
+  content: '7A 3F 9E 01 B4 5C D8 2A 6F 00 E3 71 8B 4D A9 C5 F2 30 87 1E 5B 9A D6 43 0C 7F B8 E1 64 2D A0 58 3C 96 0B F4 79 1D C2 8E 45 D3 67 AE 12 5F 9C B0 38 7E 04 E6 8A 51 C9 2F 73 DB 49 A5 16 60 BD 3E 8F 07 F1 54 C8 29 6D A3 40 92 DE 1B 75 E8 33 86 4A 5E 01 BC 68 AF 2C 97 D0 4F 83 1A E5 79 3B C6 58 A2 0E 6A F3 47 B1 25 9D D4 62 88 14 70 CE 39 5D AB 06 F8 42 8C 2E 76 E0 53 B9 1F 64 A7 D8 35 91';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--lcars-text-dim);
+  opacity: 0.08;
+  word-break: break-all;
+  pointer-events: none;
+  white-space: pre-wrap;
+}
+
+/* ============================================
+   Legacy compatibility (existing components)
+   ============================================ */
+
 .card {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
 }
 
-/* Badge styles */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -181,13 +704,15 @@ code, pre, .font-mono {
   color: var(--info);
 }
 
-/* Button styles */
 .btn-primary {
   background-color: var(--accent);
-  color: white;
+  color: var(--lcars-black);
   padding: 10px 20px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -197,7 +722,7 @@ code, pre, .font-mono {
 
 .btn-primary:hover {
   background-color: var(--accent-hover);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-amber);
 }
 
 .btn-outline {
@@ -205,7 +730,7 @@ code, pre, .font-mono {
   border: 1px solid var(--border);
   color: var(--text-primary);
   padding: 10px 20px;
-  border-radius: var(--radius-md);
+  border-radius: 20px;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
@@ -216,14 +741,15 @@ code, pre, .font-mono {
 
 .btn-outline:hover {
   background-color: var(--surface);
-  border-color: var(--border-strong);
+  border-color: var(--lcars-amber);
+  color: var(--lcars-amber);
 }
 
 .btn-danger {
   background-color: var(--negative-soft);
   color: var(--negative);
   padding: 10px 20px;
-  border-radius: var(--radius-md);
+  border-radius: 20px;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
@@ -233,10 +759,9 @@ code, pre, .font-mono {
 }
 
 .btn-danger:hover {
-  background-color: rgba(255, 69, 58, 0.2);
+  background-color: rgba(255, 51, 0, 0.2);
 }
 
-/* Input styles */
 .input {
   background-color: var(--surface-elevated);
   border: 1px solid var(--border);
@@ -253,17 +778,16 @@ code, pre, .font-mono {
 
 .input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--lcars-amber);
   background-color: var(--surface-hover);
 }
 
-/* Nav item styles */
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  border-radius: var(--radius-md);
+  border-radius: 20px;
   color: var(--text-secondary);
   font-weight: 500;
   font-size: 14px;
@@ -276,8 +800,8 @@ code, pre, .font-mono {
 }
 
 .nav-item.active {
-  background-color: var(--accent-soft);
-  color: var(--accent);
+  background-color: var(--lcars-rust);
+  color: var(--lcars-white);
   font-family: var(--font-heading);
   font-weight: 600;
 }
@@ -287,15 +811,11 @@ code, pre, .font-mono {
   height: 20px;
 }
 
-.nav-item.active svg {
-  color: var(--accent);
-}
-
-/* Stats card */
 .stats-card {
   background-color: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--lcars-amber);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   padding: 24px;
 }
 
@@ -306,14 +826,13 @@ code, pre, .font-mono {
 }
 
 .stats-card .value {
-  font-family: var(--font-heading);
+  font-family: var(--font-mono);
   font-size: 28px;
   font-weight: 700;
-  letter-spacing: -1.5px;
-  color: var(--text-primary);
+  letter-spacing: 0;
+  color: var(--lcars-amber);
 }
 
-/* Activity item */
 .activity-item {
   display: flex;
   align-items: center;
@@ -335,12 +854,56 @@ code, pre, .font-mono {
   justify-content: center;
 }
 
-/* Accent line for section headers */
 .accent-line {
   width: 24px;
-  height: 2px;
-  background-color: var(--accent);
-  border-radius: 1px;
+  height: 3px;
+  background-color: var(--lcars-amber);
+  border-radius: 2px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-header .title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.section-header .link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--lcars-amber);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions — exclude animations */
+*:not([class*="lcars-boot"]):not([class*="lcars-blink"]):not([class*="lcars-alert"]):not([class*="lcars-datastream"]) {
+  transition-property: background-color, border-color, color, fill, stroke, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 /* File tree item */
@@ -359,8 +922,8 @@ code, pre, .font-mono {
 }
 
 .file-tree-item.active {
-  background-color: var(--accent);
-  color: white;
+  background-color: var(--lcars-amber);
+  color: var(--lcars-black);
   font-weight: 600;
 }
 
@@ -369,7 +932,7 @@ code, pre, .font-mono {
   display: inline-flex;
   background-color: var(--card-elevated);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 20px;
   overflow: hidden;
 }
 
@@ -381,8 +944,8 @@ code, pre, .font-mono {
 }
 
 .toggle-group button.active {
-  background-color: var(--accent);
-  color: white;
+  background-color: var(--lcars-amber);
+  color: var(--lcars-black);
   font-weight: 600;
 }
 
@@ -395,9 +958,9 @@ code, pre, .font-mono {
   color: var(--text-secondary);
 }
 
-/* Chart bar gradient (for analytics) */
+/* Chart bar gradient */
 .chart-bar {
-  background: linear-gradient(180deg, var(--accent) 0%, rgba(255, 59, 48, 0.25) 100%);
+  background: linear-gradient(180deg, var(--lcars-amber) 0%, rgba(255, 153, 0, 0.25) 100%);
   border-radius: 4px 4px 0 0;
 }
 
@@ -409,30 +972,8 @@ code, pre, .font-mono {
 }
 
 .gauge-fill {
-  background-color: var(--accent);
+  background-color: var(--lcars-amber);
   border-radius: 4px;
-}
-
-/* Section header */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.section-header .title {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.section-header .link {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
 }
 
 /* Unsaved indicator */
@@ -452,4 +993,24 @@ code, pre, .font-mono {
 .unsaved-indicator .text {
   font-size: 12px;
   color: var(--warning);
+}
+
+/* ============================================
+   Responsive — hide sidebars on mobile
+   ============================================ */
+
+@media (max-width: 768px) {
+  .lcars-nav {
+    display: none;
+  }
+  .lcars-status-panel {
+    display: none;
+  }
+  .lcars-header-amber {
+    width: auto;
+    min-width: 100px;
+  }
+  .lcars-header-cap {
+    width: 60px;
+  }
 }
