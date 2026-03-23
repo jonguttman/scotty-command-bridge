@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 interface StatusData {
   agentStatus: "online" | "offline" | "busy";
   memoryCount: number;
   cronCount: number;
   lastActivity: string;
-  tokenUsage: number; // 0-100
+  tokenUsage: number;
   channels: { name: string; status: "connected" | "disconnected"; color: string }[];
 }
 
-function generateHexStream(length: number): string {
+function generateHexLine(): string {
   const chars = "0123456789ABCDEF";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    if (i > 0 && i % 2 === 0) result += " ";
-    result += chars[Math.floor(Math.random() * chars.length)];
+  const pairs: string[] = [];
+  for (let i = 0; i < 8; i++) {
+    pairs.push(
+      chars[Math.floor(Math.random() * 16)] +
+        chars[Math.floor(Math.random() * 16)]
+    );
   }
-  return result;
+  return pairs.join(" ");
 }
 
 function timeAgo(dateStr: string): string {
@@ -30,6 +32,14 @@ function timeAgo(dateStr: string): string {
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `${hours}h ago`;
   return `${Math.floor(hours / 24)}d ago`;
+}
+
+function formatElapsed(ms: number): string {
+  const secs = Math.floor(ms / 1000);
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 export function LCARSStatusPanel() {
@@ -46,9 +56,20 @@ export function LCARSStatusPanel() {
     ],
   });
 
-  const [hexStream, setHexStream] = useState("");
+  const [hexLines, setHexLines] = useState<string[]>([]);
   const [lastActivityDisplay, setLastActivityDisplay] = useState("N/A");
+  const [missionElapsed, setMissionElapsed] = useState("00:00:00");
   const hexRef = useRef<HTMLDivElement>(null);
+  const launchTime = useRef(new Date(2026, 2, 20).getTime());
+
+  // Generate initial hex lines
+  const initHex = useCallback(() => {
+    const lines: string[] = [];
+    for (let i = 0; i < 20; i++) {
+      lines.push(generateHexLine());
+    }
+    return lines;
+  }, []);
 
   // Fetch status data
   useEffect(() => {
@@ -73,7 +94,7 @@ export function LCARSStatusPanel() {
           memoryCount: stats?.total || 0,
           cronCount: stats?.byType?.cron_run || stats?.byType?.cron || 0,
           lastActivity: stats?.lastActivity || "",
-          tokenUsage: Math.min(100, Math.floor(Math.random() * 60 + 20)), // Simulated for now
+          tokenUsage: Math.min(100, Math.floor(Math.random() * 60 + 20)),
           channels: [
             {
               name: "TELEGRAM",
@@ -110,20 +131,80 @@ export function LCARSStatusPanel() {
     return () => clearInterval(interval);
   }, [status.lastActivity]);
 
-  // Generate scrolling hex data stream
+  // Mission elapsed time — live counter
   useEffect(() => {
-    setHexStream(generateHexStream(400));
-    const interval = setInterval(() => {
-      setHexStream(generateHexStream(400));
-    }, 5000);
+    const tick = () => {
+      const now = Date.now();
+      const elapsed = Math.max(0, now - launchTime.current);
+      setMissionElapsed(formatElapsed(elapsed));
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Cycling hex data stream
+  useEffect(() => {
+    setHexLines(initHex());
+    const interval = setInterval(() => {
+      setHexLines((prev) => {
+        const next = [...prev.slice(1), generateHexLine()];
+        return next;
+      });
+    }, 800);
+    return () => clearInterval(interval);
+  }, [initHex]);
 
   const segments = 12;
   const filledSegments = Math.round((status.tokenUsage / 100) * segments);
 
   return (
     <aside className="lcars-status-panel lcars-boot-3" style={{ height: "100%" }}>
+      {/* STARFLEET DESIGNATION */}
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "8px",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "var(--lcars-text-dim)",
+            marginBottom: "2px",
+          }}
+        >
+          Starfleet Designation
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "16px",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: "var(--lcars-amber)",
+          }}
+        >
+          SCOTTY
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "9px",
+            color: "var(--lcars-text-dim)",
+            marginTop: "2px",
+          }}
+        >
+          NCC-1701-OC
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div
+        style={{
+          height: "2px",
+          background: "linear-gradient(90deg, var(--lcars-amber), transparent)",
+        }}
+      />
+
       {/* Agent Status */}
       <div>
         <div className="lcars-status-label">Agent Status</div>
@@ -169,7 +250,7 @@ export function LCARSStatusPanel() {
         }}
       />
 
-      {/* Memory Count */}
+      {/* Activity Log */}
       <div>
         <div className="lcars-status-label">Activity Log</div>
         <div className="lcars-status-value-large" style={{ marginTop: "4px" }}>
@@ -177,11 +258,20 @@ export function LCARSStatusPanel() {
         </div>
       </div>
 
-      {/* Cron Count */}
+      {/* Mission Elapsed Time */}
       <div>
-        <div className="lcars-status-label">Cron Runs</div>
-        <div className="lcars-status-value" style={{ marginTop: "4px" }}>
-          {status.cronCount}
+        <div className="lcars-status-label">Mission Elapsed</div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "16px",
+            fontWeight: 700,
+            color: "var(--lcars-blue)",
+            marginTop: "4px",
+            letterSpacing: "0.05em",
+          }}
+        >
+          {missionElapsed}
         </div>
       </div>
 
@@ -255,7 +345,7 @@ export function LCARSStatusPanel() {
               <span
                 style={{
                   fontFamily: "var(--font-heading)",
-                  fontSize: "12px",
+                  fontSize: "11px",
                   letterSpacing: "0.12em",
                   color:
                     ch.status === "connected" ? "var(--lcars-text)" : "var(--lcars-text-dim)",
@@ -268,7 +358,7 @@ export function LCARSStatusPanel() {
         </div>
       </div>
 
-      {/* Data Stream */}
+      {/* Data Stream — cycling hex */}
       <div
         style={{
           flex: 1,
@@ -285,15 +375,26 @@ export function LCARSStatusPanel() {
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "9px",
-            lineHeight: "1.5",
+            lineHeight: "1.6",
             color: "var(--lcars-text-dim)",
-            opacity: 0.3,
-            wordBreak: "break-all",
+            opacity: 0.4,
             overflow: "hidden",
-            maxHeight: "120px",
+            maxHeight: "140px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          {hexStream}
+          {hexLines.map((line, i) => (
+            <div
+              key={`${i}-${line}`}
+              style={{
+                transition: "opacity 0.3s ease",
+                opacity: i < 2 ? 0.3 : i > hexLines.length - 3 ? 0.2 : 0.5,
+              }}
+            >
+              {line}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -302,7 +403,8 @@ export function LCARSStatusPanel() {
         style={{
           height: "8px",
           borderRadius: "4px",
-          background: "linear-gradient(90deg, var(--lcars-blue-dark), var(--lcars-purple), var(--lcars-amber))",
+          background:
+            "linear-gradient(90deg, var(--lcars-blue-dark), var(--lcars-purple), var(--lcars-amber))",
           flexShrink: 0,
         }}
       />
