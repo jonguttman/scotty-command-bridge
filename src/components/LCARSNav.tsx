@@ -16,6 +16,9 @@ const navItems = [
   { href: "/analytics", label: "Sensors", color: "var(--lcars-purple)", group: 3 },
   { href: "/terminal", label: "Console", color: "var(--lcars-amber)", group: 0 },
   { href: "/git", label: "Helm", color: "var(--lcars-rust)", group: 1 },
+  { href: "/memory-bay", label: "Memory Bay", color: "var(--lcars-blue)", group: 2 },
+  { href: "/goals", label: "Objectives", color: "var(--lcars-amber)", group: 0 },
+  { href: "/rd-intel", label: "R&D Intel", color: "var(--lcars-purple)", group: 3 },
 ];
 
 const groupColors = [
