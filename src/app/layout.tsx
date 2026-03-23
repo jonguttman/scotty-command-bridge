@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Scotty Command Bridge — OpenClaw",
   description: "LCARS Mission Control for OpenClaw agents",
   manifest: "/manifest.json",
-  themeColor: "#0d0f14",
+  themeColor: "#141418",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -45,15 +45,6 @@ export default function RootLayout({
       </head>
       <body
         className={`${antonio.variable} ${spaceMono.variable} ${jetbrainsMono.variable}`}
-        style={{
-          backgroundColor: '#0d0f14',
-          color: 'var(--lcars-text)',
-          fontFamily: 'var(--font-body)',
-          margin: 0,
-          padding: 0,
-          overflow: 'hidden',
-          height: '100vh',
-        }}
       >
         {children}
       </body>

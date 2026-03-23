@@ -34,28 +34,28 @@ export function LCARSTopBar() {
   }, []);
 
   return (
-    <div className="lcars-topbar lcars-boot-1">
-      {/* Left: small colored pill indicators */}
-      <div className="lcars-topbar-left">
-        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-amber)" }} />
-        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-rust)" }} />
-        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-blue)" }} />
-        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-green)" }} />
-        <span className="lcars-topbar-title">SCOTTY COMMAND BRIDGE</span>
+    <>
+      {/* Top Strip — 24px */}
+      <div className="lcars-topstrip lcars-boot-1">
+        <div className="lcars-topstrip-left">
+          <span>SCOTTY &mdash; NCC-1701-OC</span>
+          <div className="lcars-topstrip-indicator" />
+          <div className="lcars-topstrip-indicator blue" />
+          <div className="lcars-topstrip-indicator rust" />
+        </div>
+        <div className="lcars-topstrip-right">
+          SD {stardate}
+        </div>
       </div>
 
-      {/* Right: stardate + time */}
-      <div className="lcars-topbar-right">
-        <span className="lcars-topbar-meta">
-          SD <strong>{stardate}</strong>
-        </span>
-        <span className="lcars-topbar-meta">
-          <strong style={{ color: "var(--lcars-blue)" }}>{time}</strong>
-        </span>
+      {/* Toolbar — 40px */}
+      <div className="lcars-toolbar lcars-boot-1">
+        <div className="lcars-toolbar-title">SCOTTY COMMAND BRIDGE</div>
+        <div className="lcars-toolbar-time">{time}</div>
       </div>
-    </div>
+    </>
   );
 }
 
-// Keep legacy export for any other imports
+// Keep legacy export
 export { LCARSTopBar as LCARSHeader };
