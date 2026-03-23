@@ -322,13 +322,17 @@ code, pre, .font-mono {
 }
 
 .lcars-header-amber {
-  background: linear-gradient(135deg, var(--lcars-amber) 0%, var(--lcars-rust) 100%);
-  width: 30%;
-  min-width: 200px;
-  border-radius: 0 0 var(--lcars-radius) 0;
+  background-color: var(--lcars-amber);
+  width: 28%;
+  min-width: 220px;
   display: flex;
   align-items: center;
   padding-left: 24px;
+  padding-right: 48px;
+  /* Picard LCARS diagonal right edge — clip-path creates the signature taper */
+  clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 100%, 0 100%);
+  position: relative;
+  z-index: 2;
 }
 
 .lcars-header-title {
@@ -336,28 +340,35 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 24px 0 8px;
   background-color: var(--lcars-bg);
+  position: relative;
+  z-index: 1;
 }
 
 .lcars-header-cap {
-  width: 120px;
-  background: linear-gradient(135deg, var(--lcars-purple) 0%, var(--lcars-blue-dark) 100%);
-  border-radius: 0 0 0 var(--lcars-radius);
+  width: 100px;
+  background-color: var(--lcars-purple);
+  /* Mirror diagonal on right cap */
+  clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%);
+  flex-shrink: 0;
 }
 
-/* Thin rust stripe below header */
+/* Thin stripe below header — Picard LCARS segmented */
 .lcars-header-stripe {
-  height: 4px;
+  height: 6px;
   background: linear-gradient(
     90deg,
-    var(--lcars-rust) 0%,
-    var(--lcars-rust) 30%,
-    var(--lcars-amber) 30%,
-    var(--lcars-amber) 60%,
-    var(--lcars-blue-dark) 60%,
-    var(--lcars-blue-dark) 80%,
-    var(--lcars-purple) 80%
+    var(--lcars-amber) 0%,
+    var(--lcars-amber) 28%,
+    var(--lcars-rust) 28%,
+    var(--lcars-rust) 29%,
+    var(--lcars-bg) 29%,
+    var(--lcars-bg) 71%,
+    var(--lcars-blue-dark) 71%,
+    var(--lcars-blue-dark) 72%,
+    var(--lcars-purple) 72%,
+    var(--lcars-purple) 100%
   );
 }
 

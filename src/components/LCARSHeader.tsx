@@ -42,7 +42,7 @@ export function LCARSHeader() {
           <span
             style={{
               fontFamily: "var(--font-heading)",
-              fontSize: "14px",
+              fontSize: "13px",
               fontWeight: 700,
               letterSpacing: "0.2em",
               color: "var(--lcars-black)",
