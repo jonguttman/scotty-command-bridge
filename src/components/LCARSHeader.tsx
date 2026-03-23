@@ -12,7 +12,7 @@ function calculateStardate(): string {
   return `${year}${fraction}`;
 }
 
-export function LCARSHeader() {
+export function LCARSTopBar() {
   const [stardate, setStardate] = useState("");
   const [time, setTime] = useState("");
 
@@ -34,107 +34,28 @@ export function LCARSHeader() {
   }, []);
 
   return (
-    <div className="lcars-boot-1">
-      {/* Main header bar */}
-      <div className="lcars-header">
-        {/* Amber left section */}
-        <div className="lcars-header-amber">
-          <span
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "13px",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              color: "var(--lcars-black)",
-              textTransform: "uppercase",
-            }}
-          >
-            LCARS 47
-          </span>
-        </div>
-
-        {/* Center title section */}
-        <div className="lcars-header-title">
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <h1
-              style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "22px",
-                fontWeight: 400,
-                letterSpacing: "0.2em",
-                color: "var(--lcars-text)",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Scotty Command Bridge
-            </h1>
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "11px",
-                color: "var(--lcars-text-dim)",
-                letterSpacing: "0.1em",
-              }}
-            >
-              OPENCLAW GATEWAY
-            </span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <div style={{ textAlign: "right" }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "10px",
-                  letterSpacing: "0.15em",
-                  color: "var(--lcars-text-dim)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Stardate
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  color: "var(--lcars-amber)",
-                }}
-              >
-                {stardate}
-              </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "10px",
-                  letterSpacing: "0.15em",
-                  color: "var(--lcars-text-dim)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Ship Time
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  color: "var(--lcars-blue)",
-                }}
-              >
-                {time}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right cap */}
-        <div className="lcars-header-cap" />
+    <div className="lcars-topbar lcars-boot-1">
+      {/* Left: small colored pill indicators */}
+      <div className="lcars-topbar-left">
+        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-amber)" }} />
+        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-rust)" }} />
+        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-blue)" }} />
+        <div className="lcars-topbar-pill" style={{ background: "var(--lcars-green)" }} />
+        <span className="lcars-topbar-title">SCOTTY COMMAND BRIDGE</span>
       </div>
 
-      {/* Stripe removed — elbow connects header to nav directly */}
+      {/* Right: stardate + time */}
+      <div className="lcars-topbar-right">
+        <span className="lcars-topbar-meta">
+          SD <strong>{stardate}</strong>
+        </span>
+        <span className="lcars-topbar-meta">
+          <strong style={{ color: "var(--lcars-blue)" }}>{time}</strong>
+        </span>
+      </div>
     </div>
   );
 }
+
+// Keep legacy export for any other imports
+export { LCARSTopBar as LCARSHeader };

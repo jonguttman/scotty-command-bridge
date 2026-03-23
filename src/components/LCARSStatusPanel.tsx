@@ -62,7 +62,6 @@ export function LCARSStatusPanel() {
   const hexRef = useRef<HTMLDivElement>(null);
   const launchTime = useRef(new Date(2026, 2, 20).getTime());
 
-  // Generate initial hex lines
   const initHex = useCallback(() => {
     const lines: string[] = [];
     for (let i = 0; i < 20; i++) {
@@ -71,7 +70,6 @@ export function LCARSStatusPanel() {
     return lines;
   }, []);
 
-  // Fetch status data
   useEffect(() => {
     const fetchStatus = async () => {
       try {
@@ -96,21 +94,9 @@ export function LCARSStatusPanel() {
           lastActivity: stats?.lastActivity || "",
           tokenUsage: Math.min(100, Math.floor(Math.random() * 60 + 20)),
           channels: [
-            {
-              name: "TELEGRAM",
-              status: hasTelegram ? "connected" : "disconnected",
-              color: "var(--lcars-blue)",
-            },
-            {
-              name: "SLACK",
-              status: "disconnected",
-              color: "var(--lcars-purple)",
-            },
-            {
-              name: "GATEWAY",
-              status: hasGateway ? "connected" : "disconnected",
-              color: "var(--lcars-green)",
-            },
+            { name: "TELEGRAM", status: hasTelegram ? "connected" : "disconnected", color: "var(--lcars-blue)" },
+            { name: "SLACK", status: "disconnected", color: "var(--lcars-purple)" },
+            { name: "GATEWAY", status: hasGateway ? "connected" : "disconnected", color: "var(--lcars-green)" },
           ],
         }));
       } catch {
@@ -123,7 +109,6 @@ export function LCARSStatusPanel() {
     return () => clearInterval(interval);
   }, []);
 
-  // Update "last activity" display every 30s
   useEffect(() => {
     const update = () => setLastActivityDisplay(timeAgo(status.lastActivity));
     update();
@@ -131,7 +116,6 @@ export function LCARSStatusPanel() {
     return () => clearInterval(interval);
   }, [status.lastActivity]);
 
-  // Mission elapsed time — live counter
   useEffect(() => {
     const tick = () => {
       const now = Date.now();
@@ -143,7 +127,6 @@ export function LCARSStatusPanel() {
     return () => clearInterval(interval);
   }, []);
 
-  // Cycling hex data stream
   useEffect(() => {
     setHexLines(initHex());
     const interval = setInterval(() => {
@@ -159,96 +142,61 @@ export function LCARSStatusPanel() {
   const filledSegments = Math.round((status.tokenUsage / 100) * segments);
 
   return (
-    <aside className="lcars-status-panel lcars-boot-3" style={{ height: "100%" }}>
-      {/* STARFLEET DESIGNATION */}
+    <aside
+      className="lcars-boot-3"
+      style={{
+        width: "200px",
+        background: "var(--lcars-panel)",
+        borderLeft: "1px solid var(--lcars-border)",
+        padding: "12px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "14px",
+        overflowY: "auto",
+        flexShrink: 0,
+      }}
+    >
+      {/* Designation */}
       <div>
-        <div
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "8px",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--lcars-text-dim)",
-            marginBottom: "2px",
-          }}
-        >
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "8px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--lcars-text-dim)", marginBottom: "2px" }}>
           Starfleet Designation
         </div>
-        <div
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "16px",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "var(--lcars-amber)",
-          }}
-        >
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "14px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--lcars-amber)" }}>
           SCOTTY
         </div>
-        <div
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "9px",
-            color: "var(--lcars-text-dim)",
-            marginTop: "2px",
-          }}
-        >
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--lcars-text-dim)", marginTop: "2px" }}>
           NCC-1701-OC
         </div>
       </div>
 
-      {/* Divider */}
-      <div
-        style={{
-          height: "2px",
-          background: "linear-gradient(90deg, var(--lcars-amber), transparent)",
-        }}
-      />
+      <div className="lcars-rule" />
 
       {/* Agent Status */}
       <div>
         <div className="lcars-status-label">Agent Status</div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
           <div
             className="lcars-blink"
             style={{
-              width: "10px",
-              height: "10px",
+              width: "8px",
+              height: "8px",
               borderRadius: "50%",
-              backgroundColor:
-                status.agentStatus === "online"
-                  ? "var(--lcars-green)"
-                  : status.agentStatus === "busy"
-                  ? "var(--lcars-amber)"
-                  : "var(--lcars-red)",
+              backgroundColor: status.agentStatus === "online" ? "var(--lcars-green)" : status.agentStatus === "busy" ? "var(--lcars-amber)" : "var(--lcars-red)",
             }}
           />
-          <span
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "14px",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color:
-                status.agentStatus === "online"
-                  ? "var(--lcars-green)"
-                  : status.agentStatus === "busy"
-                  ? "var(--lcars-amber)"
-                  : "var(--lcars-red)",
-            }}
-          >
+          <span style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "12px",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: status.agentStatus === "online" ? "var(--lcars-green)" : status.agentStatus === "busy" ? "var(--lcars-amber)" : "var(--lcars-red)",
+          }}>
             {status.agentStatus}
           </span>
         </div>
       </div>
 
-      {/* Divider */}
-      <div
-        style={{
-          height: "2px",
-          background: "linear-gradient(90deg, var(--lcars-blue-dark), transparent)",
-        }}
-      />
+      <div className="lcars-rule" />
 
       {/* Activity Log */}
       <div>
@@ -258,19 +206,10 @@ export function LCARSStatusPanel() {
         </div>
       </div>
 
-      {/* Mission Elapsed Time */}
+      {/* Mission Elapsed */}
       <div>
         <div className="lcars-status-label">Mission Elapsed</div>
-        <div
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "16px",
-            fontWeight: 700,
-            color: "var(--lcars-blue)",
-            marginTop: "4px",
-            letterSpacing: "0.05em",
-          }}
-        >
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--lcars-blue)", marginTop: "4px", letterSpacing: "0.05em" }}>
           {missionElapsed}
         </div>
       </div>
@@ -278,79 +217,49 @@ export function LCARSStatusPanel() {
       {/* Last Activity */}
       <div>
         <div className="lcars-status-label">Last Activity</div>
-        <div
-          className="lcars-status-value"
-          style={{ marginTop: "4px", color: "var(--lcars-blue)" }}
-        >
+        <div className="lcars-status-value" style={{ marginTop: "4px", color: "var(--lcars-blue)" }}>
           {lastActivityDisplay}
         </div>
       </div>
 
-      {/* Divider */}
-      <div
-        style={{
-          height: "2px",
-          background: "linear-gradient(90deg, var(--lcars-amber), transparent)",
-        }}
-      />
+      <div className="lcars-rule" />
 
       {/* Token Usage */}
       <div>
         <div className="lcars-status-label">Token Allocation</div>
-        <div style={{ marginTop: "8px" }}>
+        <div style={{ marginTop: "6px" }}>
           <div className="lcars-progress">
             {Array.from({ length: segments }).map((_, i) => (
-              <div
-                key={i}
-                className={`lcars-progress-segment ${i < filledSegments ? "filled" : ""}`}
-              />
+              <div key={i} className={`lcars-progress-segment ${i < filledSegments ? "filled" : ""}`} />
             ))}
           </div>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--lcars-amber)",
-              marginTop: "4px",
-              textAlign: "right",
-            }}
-          >
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--lcars-amber)", marginTop: "4px", textAlign: "right" }}>
             {status.tokenUsage}%
           </div>
         </div>
       </div>
 
-      {/* Divider */}
-      <div
-        style={{
-          height: "2px",
-          background: "linear-gradient(90deg, var(--lcars-purple), transparent)",
-        }}
-      />
+      <div className="lcars-rule" />
 
       {/* Channels */}
       <div>
         <div className="lcars-status-label">Channels</div>
-        <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div style={{ marginTop: "6px", display: "flex", flexDirection: "column", gap: "4px" }}>
           {status.channels.map((ch) => (
             <div key={ch.name} className="lcars-channel">
               <div
                 className="lcars-channel-diamond"
                 style={{
-                  backgroundColor:
-                    ch.status === "connected" ? ch.color : "var(--lcars-text-dim)",
+                  backgroundColor: ch.status === "connected" ? ch.color : "var(--lcars-text-dim)",
                   opacity: ch.status === "connected" ? 1 : 0.4,
                 }}
               />
-              <span
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "11px",
-                  letterSpacing: "0.12em",
-                  color:
-                    ch.status === "connected" ? "var(--lcars-text)" : "var(--lcars-text-dim)",
-                }}
-              >
+              <span style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "10px",
+                letterSpacing: "0.12em",
+                color: ch.status === "connected" ? "var(--lcars-text)" : "var(--lcars-text-dim)",
+              }}>
                 {ch.name}
               </span>
             </div>
@@ -358,56 +267,33 @@ export function LCARSStatusPanel() {
         </div>
       </div>
 
-      {/* Data Stream — cycling hex */}
-      <div
-        style={{
-          flex: 1,
-          overflow: "hidden",
-          position: "relative",
-          minHeight: "60px",
-        }}
-      >
-        <div className="lcars-status-label" style={{ marginBottom: "6px" }}>
-          Data Stream
-        </div>
+      {/* Data Stream */}
+      <div style={{ flex: 1, overflow: "hidden", position: "relative", minHeight: "40px" }}>
+        <div className="lcars-status-label" style={{ marginBottom: "4px" }}>Data Stream</div>
         <div
           ref={hexRef}
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "9px",
+            fontSize: "8px",
             lineHeight: "1.6",
             color: "var(--lcars-text-dim)",
-            opacity: 0.4,
+            opacity: 0.3,
             overflow: "hidden",
-            maxHeight: "140px",
+            maxHeight: "120px",
             display: "flex",
             flexDirection: "column",
           }}
         >
           {hexLines.map((line, i) => (
-            <div
-              key={`${i}-${line}`}
-              style={{
-                transition: "opacity 0.3s ease",
-                opacity: i < 2 ? 0.3 : i > hexLines.length - 3 ? 0.2 : 0.5,
-              }}
-            >
+            <div key={`${i}-${line}`} style={{ transition: "opacity 0.3s ease", opacity: i < 2 ? 0.3 : i > hexLines.length - 3 ? 0.2 : 0.5 }}>
               {line}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom decorative bar */}
-      <div
-        style={{
-          height: "8px",
-          borderRadius: "4px",
-          background:
-            "linear-gradient(90deg, var(--lcars-blue-dark), var(--lcars-purple), var(--lcars-amber))",
-          flexShrink: 0,
-        }}
-      />
+      {/* Bottom bar */}
+      <div style={{ height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, var(--lcars-blue), var(--lcars-purple), var(--lcars-amber))", flexShrink: 0 }} />
     </aside>
   );
 }
