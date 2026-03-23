@@ -14,19 +14,10 @@ function calculateStardate(): string {
 
 export function LCARSTopBar() {
   const [stardate, setStardate] = useState("");
-  const [time, setTime] = useState("");
 
   useEffect(() => {
     const update = () => {
       setStardate(calculateStardate());
-      setTime(
-        new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        })
-      );
     };
     update();
     const interval = setInterval(update, 1000);
@@ -34,26 +25,17 @@ export function LCARSTopBar() {
   }, []);
 
   return (
-    <>
-      {/* Top Strip — 24px */}
-      <div className="lcars-topstrip lcars-boot-1">
-        <div className="lcars-topstrip-left">
-          <span>SCOTTY &mdash; NCC-1701-OC</span>
-          <div className="lcars-topstrip-indicator" />
-          <div className="lcars-topstrip-indicator blue" />
-          <div className="lcars-topstrip-indicator rust" />
-        </div>
-        <div className="lcars-topstrip-right">
-          SD {stardate}
-        </div>
+    <div className="lcars-topstrip lcars-boot-1">
+      <div className="lcars-topstrip-left">
+        <span>SCOTTY &mdash; NCC-1701-OC</span>
+        <div className="lcars-topstrip-indicator" />
+        <div className="lcars-topstrip-indicator blue" />
+        <div className="lcars-topstrip-indicator rust" />
       </div>
-
-      {/* Toolbar — 40px */}
-      <div className="lcars-toolbar lcars-boot-1">
-        <div className="lcars-toolbar-title">SCOTTY COMMAND BRIDGE</div>
-        <div className="lcars-toolbar-time">{time}</div>
+      <div className="lcars-topstrip-right">
+        SD {stardate}
       </div>
-    </>
+    </div>
   );
 }
 

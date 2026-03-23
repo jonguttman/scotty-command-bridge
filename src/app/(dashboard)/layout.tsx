@@ -10,14 +10,17 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="lcars-root">
-      {/* Top strip + Toolbar */}
+      {/* Top strip — thin indicator row */}
       <LCARSTopBar />
 
       {/* Body: Sidebar | Main */}
       <div className="lcars-body">
-        <aside className="lcars-sidebar">
-          <LCARSNav />
-        </aside>
+        {/* Sidebar wrapper creates left gap */}
+        <div className="lcars-sidebar-wrapper">
+          <aside className="lcars-sidebar">
+            <LCARSNav />
+          </aside>
+        </div>
         <main className="lcars-main">
           <div className="lcars-content lcars-boot-4">
             {children}

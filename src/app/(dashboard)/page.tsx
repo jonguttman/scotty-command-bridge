@@ -89,27 +89,50 @@ export default function BridgePage() {
 
   return (
     <div className="lcars-data-bg">
-      {/* Stat Grid — 4 cards */}
+      {/* Stat Grid — 4 colored cards */}
       <div className="lcars-stat-grid" style={{ animation: "lcars-slide-up 0.3s ease-out 0.2s both" }}>
-        <div className="lcars-stat-card rust-accent">
-          <div className="lcars-stat-label">Active Sessions</div>
-          <div className="lcars-stat-value">{onlineCount}</div>
-          <div className="lcars-stat-sub">{agents.length} total agents</div>
+        <div className="lcars-stat-card teal">
+          <div>
+            <div className="lcars-stat-label">Active Sessions</div>
+            <div className="lcars-stat-value">{onlineCount}</div>
+          </div>
+          <div className="lcars-stat-card-icon">🌐</div>
+          <Link href="/agents" className="lcars-stat-footer">
+            VIEW ALL SESSIONS →
+          </Link>
         </div>
-        <div className="lcars-stat-card">
-          <div className="lcars-stat-label">Memory Entries</div>
-          <div className="lcars-stat-value" style={{ color: "#4499cc" }}>{stats.total}</div>
-          <div className="lcars-stat-sub">{stats.today} today</div>
+
+        <div className="lcars-stat-card rust">
+          <div>
+            <div className="lcars-stat-label">Memory Entries</div>
+            <div className="lcars-stat-value">{stats.total}</div>
+          </div>
+          <div className="lcars-stat-card-icon">🧠</div>
+          <Link href="/memory" className="lcars-stat-footer">
+            SEARCH MEMORY →
+          </Link>
         </div>
-        <div className="lcars-stat-card">
-          <div className="lcars-stat-label">Scheduled Tasks</div>
-          <div className="lcars-stat-value" style={{ color: "#ff6600" }}>{cronCount}</div>
-          <div className="lcars-stat-sub">activity entries</div>
+
+        <div className="lcars-stat-card amber">
+          <div>
+            <div className="lcars-stat-label">Scheduled Tasks</div>
+            <div className="lcars-stat-value">{cronCount}</div>
+          </div>
+          <div className="lcars-stat-card-icon">⏰</div>
+          <Link href="/cron" className="lcars-stat-footer">
+            VIEW SCHEDULE →
+          </Link>
         </div>
-        <div className="lcars-stat-card">
-          <div className="lcars-stat-label">Mission Uptime</div>
-          <div className="lcars-stat-value" style={{ color: "#00cc66" }}>{elapsed}</div>
-          <div className="lcars-stat-sub">days since launch</div>
+
+        <div className="lcars-stat-card green">
+          <div>
+            <div className="lcars-stat-label">Mission Uptime</div>
+            <div className="lcars-stat-value">{elapsed}</div>
+          </div>
+          <div className="lcars-stat-card-icon">⚡</div>
+          <Link href="/logs" className="lcars-stat-footer">
+            VIEW LOGS →
+          </Link>
         </div>
       </div>
 
