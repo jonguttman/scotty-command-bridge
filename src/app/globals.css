@@ -323,14 +323,14 @@ code, pre, .font-mono {
 
 .lcars-header-amber {
   background-color: var(--lcars-amber);
-  width: 28%;
-  min-width: 220px;
+  width: 200px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding-left: 24px;
-  padding-right: 48px;
-  /* Picard LCARS diagonal right edge — clip-path creates the signature taper */
-  clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 100%, 0 100%);
+  padding-left: 32px;
+  padding-right: 24px;
+  /* Authentic LCARS elbow — large rounded top-left corner */
+  border-radius: 50px 0 0 0;
   position: relative;
   z-index: 2;
 }
@@ -348,28 +348,15 @@ code, pre, .font-mono {
 
 .lcars-header-cap {
   width: 100px;
-  background-color: var(--lcars-purple);
-  /* Mirror diagonal on right cap */
-  clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%);
+  background-color: var(--lcars-rust);
+  /* Authentic LCARS cap — rounded top-right corner */
+  border-radius: 0 50px 0 0;
   flex-shrink: 0;
 }
 
-/* Thin stripe below header — Picard LCARS segmented */
+/* Thin stripe below header — hidden, elbow connects directly to nav */
 .lcars-header-stripe {
-  height: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--lcars-amber) 0%,
-    var(--lcars-amber) 28%,
-    var(--lcars-rust) 28%,
-    var(--lcars-rust) 29%,
-    var(--lcars-bg) 29%,
-    var(--lcars-bg) 71%,
-    var(--lcars-blue-dark) 71%,
-    var(--lcars-blue-dark) 72%,
-    var(--lcars-purple) 72%,
-    var(--lcars-purple) 100%
-  );
+  display: none;
 }
 
 /* LCARS Elbow Piece — the signature rounded corner connector */
@@ -1210,7 +1197,7 @@ code, pre, .font-mono {
     display: none;
   }
   .lcars-header-amber {
-    width: auto;
+    width: 100px;
     min-width: 100px;
   }
   .lcars-header-cap {
