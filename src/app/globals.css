@@ -354,10 +354,7 @@ code, pre, .font-mono {
   flex-shrink: 0;
 }
 
-/* Thin stripe below header — hidden, elbow connects directly to nav */
-.lcars-header-stripe {
-  display: none;
-}
+/* Header stripe removed — elbow connects header directly to nav rail */
 
 /* LCARS Elbow Piece — the signature rounded corner connector */
 .lcars-elbow {

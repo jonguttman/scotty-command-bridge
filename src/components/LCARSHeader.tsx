@@ -134,8 +134,7 @@ export function LCARSHeader() {
         <div className="lcars-header-cap" />
       </div>
 
-      {/* Color stripe */}
-      <div className="lcars-header-stripe" />
+      {/* Stripe removed — elbow connects header to nav directly */}
     </div>
   );
 }
