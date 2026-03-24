@@ -31,14 +31,13 @@ export function LCARSTopBar() {
 
   return (
     <header className="app-header">
-      <div className="app-header-left">
+      <div className="app-header-brand">
         <div className="app-header-dot" />
         <span>SCOTTY — NCC-1701-OC</span>
-        <span style={{ fontSize: 14, opacity: 0.4 }}>□</span>
       </div>
       <div className="app-header-right">
-        <div className="app-header-hostname">{hostname}</div>
-        <div className="app-header-menu">≡</div>
+        <div className="app-header-box">{hostname}</div>
+        <div className="app-header-pill">≡</div>
       </div>
     </header>
   );

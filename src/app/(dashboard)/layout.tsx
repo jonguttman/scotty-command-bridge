@@ -12,19 +12,12 @@ export default function DashboardLayout({
     <>
       <LCARSTopBar />
       <div className="app-body">
-        {/* Left decorative icon column */}
-        <div className="app-icon-col">
-          <div className="app-icon rust">◆</div>
-          <div className="app-icon teal">◎</div>
-          <div className="app-icon blue">⊕</div>
-          <div className="app-icon orange">◈</div>
-          <div className="app-icon green">●</div>
+        {/* Sidebar - LCARS dual-curve structure */}
+        <div className="app-sidebar-outer">
+          <div className="app-sidebar-inner">
+            <LCARSNav />
+          </div>
         </div>
-
-        {/* Sidebar */}
-        <aside className="app-sidebar">
-          <LCARSNav />
-        </aside>
 
         {/* Main content */}
         <main className="app-main">
