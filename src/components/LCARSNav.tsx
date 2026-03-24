@@ -85,7 +85,7 @@ export function LCARSNav() {
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
   return (
-    <nav className="mt-2" style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem" }}>
+    <nav className="mt-2" style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem", height: "100%" }}>
       {/* Title + Time */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "0 0 0.4rem 0" }}>
         <span className="lcars-sidebar-title">SCOTTY</span>
@@ -150,6 +150,16 @@ export function LCARSNav() {
           </li>
         ))}
       </ul>
+
+      {/* Bottom LCARS amber block - mirrors the top */}
+      <div style={{
+        marginTop: "auto",
+        height: "120px",
+        background: "#d4880a",
+        borderRadius: "0 0 0 80px",
+        flexShrink: 0,
+        width: "100%",
+      }} />
     </nav>
   );
 }

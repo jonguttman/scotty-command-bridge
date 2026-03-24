@@ -597,10 +597,12 @@ code, pre, .font-mono {
 /* Nav panels — for backwards compat */
 .lcars-nav-panel {
   margin-bottom: var(--gap50);
+  background: transparent;
 }
 
 .lcars-nav-panel-purple {
   margin-bottom: var(--gap50);
+  background: transparent;
 }
 
 .lcars-nav-item {
@@ -619,19 +621,20 @@ code, pre, .font-mono {
   transition: background-color 0.25s, color 0.25s;
   text-decoration: none;
   border: none;
-  background: var(--color-primary);
+  background: #5a8ab5;
+  color: #000000;
   position: relative;
   width: 100%;
 }
 
 .lcars-nav-item:hover {
-  background-color: var(--color-tertiary);
-  color: var(--color-tertiary-hover);
+  background-color: #7aaace;
+  color: #000;
 }
 
 .lcars-nav-item.active {
   background-color: #915e4d;
-  color: var(--color-background);
+  color: #000;
 }
 
 .lcars-nav-item-icon {
