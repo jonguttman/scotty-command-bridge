@@ -25,15 +25,17 @@ export function LCARSTopBar() {
   }, []);
 
   return (
-    <div className="lcars-topstrip lcars-boot-1">
-      <div className="lcars-topstrip-left">
-        <span>SCOTTY &mdash; NCC-1701-OC</span>
-        <div className="lcars-topstrip-indicator" />
-        <div className="lcars-topstrip-indicator blue" />
-        <div className="lcars-topstrip-indicator rust" />
-      </div>
-      <div className="lcars-topstrip-right">
-        SD {stardate}
+    <div className="lcars-header lcars-boot-1">
+      <div className="lcars-header-inner">
+        <div className="lcars-header-left">
+          <span>SCOTTY &mdash; NCC-1701-OC</span>
+          <div className="lcars-header-indicator rust" />
+          <div className="lcars-header-indicator blue" />
+          <div className="lcars-header-indicator primary" />
+        </div>
+        <div className="lcars-header-right">
+          SD {stardate}
+        </div>
       </div>
     </div>
   );

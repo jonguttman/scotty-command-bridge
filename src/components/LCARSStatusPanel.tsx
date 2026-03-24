@@ -50,9 +50,9 @@ export function LCARSStatusPanel() {
     lastActivity: "",
     tokenUsage: 0,
     channels: [
-      { name: "TELEGRAM", status: "disconnected", color: "var(--lcars-blue)" },
-      { name: "SLACK", status: "disconnected", color: "var(--lcars-purple)" },
-      { name: "GATEWAY", status: "disconnected", color: "var(--lcars-green)" },
+      { name: "TELEGRAM", status: "disconnected", color: "var(--color-tertiary-hover)" },
+      { name: "SLACK", status: "disconnected", color: "var(--color-purple)" },
+      { name: "GATEWAY", status: "disconnected", color: "var(--color-success)" },
     ],
   });
 
@@ -94,9 +94,9 @@ export function LCARSStatusPanel() {
           lastActivity: stats?.lastActivity || "",
           tokenUsage: Math.min(100, Math.floor(Math.random() * 60 + 20)),
           channels: [
-            { name: "TELEGRAM", status: hasTelegram ? "connected" : "disconnected", color: "var(--lcars-blue)" },
-            { name: "SLACK", status: "disconnected", color: "var(--lcars-purple)" },
-            { name: "GATEWAY", status: hasGateway ? "connected" : "disconnected", color: "var(--lcars-green)" },
+            { name: "TELEGRAM", status: hasTelegram ? "connected" : "disconnected", color: "var(--color-tertiary-hover)" },
+            { name: "SLACK", status: "disconnected", color: "var(--color-purple)" },
+            { name: "GATEWAY", status: hasGateway ? "connected" : "disconnected", color: "var(--color-success)" },
           ],
         }));
       } catch {
@@ -146,9 +146,10 @@ export function LCARSStatusPanel() {
       className="lcars-boot-3"
       style={{
         width: "200px",
-        background: "var(--lcars-panel)",
-        borderLeft: "1px solid var(--lcars-border)",
-        padding: "12px",
+        background: "var(--color-primary)",
+        borderLeft: "var(--border-width) solid var(--color-secondary)",
+        borderRadius: "0 var(--radius100) var(--radius100) 0",
+        padding: "var(--gap)",
         display: "flex",
         flexDirection: "column",
         gap: "14px",
@@ -158,13 +159,13 @@ export function LCARSStatusPanel() {
     >
       {/* Designation */}
       <div>
-        <div style={{ fontFamily: "var(--font-heading)", fontSize: "8px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--lcars-text-dim)", marginBottom: "2px" }}>
+        <div style={{ fontFamily: "var(--font-family)", fontSize: "0.9rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-tertiary)", marginBottom: "2px" }}>
           Starfleet Designation
         </div>
-        <div style={{ fontFamily: "var(--font-heading)", fontSize: "14px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--lcars-amber)" }}>
+        <div style={{ fontFamily: "var(--font-family)", fontSize: "1.4rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--color-quaternary)" }}>
           SCOTTY
         </div>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--lcars-text-dim)", marginTop: "2px" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--color-tertiary)", marginTop: "2px" }}>
           NCC-1701-OC
         </div>
       </div>
@@ -181,15 +182,15 @@ export function LCARSStatusPanel() {
               width: "8px",
               height: "8px",
               borderRadius: "50%",
-              backgroundColor: status.agentStatus === "online" ? "var(--lcars-green)" : status.agentStatus === "busy" ? "var(--lcars-amber)" : "var(--lcars-red)",
+              backgroundColor: status.agentStatus === "online" ? "var(--color-success)" : status.agentStatus === "busy" ? "var(--color-amber)" : "var(--color-danger)",
             }}
           />
           <span style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "12px",
+            fontFamily: "var(--font-family)",
+            fontSize: "1.2rem",
             letterSpacing: "0.15em",
             textTransform: "uppercase",
-            color: status.agentStatus === "online" ? "var(--lcars-green)" : status.agentStatus === "busy" ? "var(--lcars-amber)" : "var(--lcars-red)",
+            color: status.agentStatus === "online" ? "var(--color-success)" : status.agentStatus === "busy" ? "var(--color-amber)" : "var(--color-danger)",
           }}>
             {status.agentStatus}
           </span>
@@ -209,7 +210,7 @@ export function LCARSStatusPanel() {
       {/* Mission Elapsed */}
       <div>
         <div className="lcars-status-label">Mission Elapsed</div>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--lcars-blue)", marginTop: "4px", letterSpacing: "0.05em" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.4rem", fontWeight: 700, color: "var(--color-tertiary-hover)", marginTop: "4px", letterSpacing: "0.05em" }}>
           {missionElapsed}
         </div>
       </div>
@@ -217,7 +218,7 @@ export function LCARSStatusPanel() {
       {/* Last Activity */}
       <div>
         <div className="lcars-status-label">Last Activity</div>
-        <div className="lcars-status-value" style={{ marginTop: "4px", color: "var(--lcars-blue)" }}>
+        <div className="lcars-status-value" style={{ marginTop: "4px" }}>
           {lastActivityDisplay}
         </div>
       </div>
@@ -233,7 +234,7 @@ export function LCARSStatusPanel() {
               <div key={i} className={`lcars-progress-segment ${i < filledSegments ? "filled" : ""}`} />
             ))}
           </div>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--lcars-amber)", marginTop: "4px", textAlign: "right" }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--color-quaternary)", marginTop: "4px", textAlign: "right" }}>
             {status.tokenUsage}%
           </div>
         </div>
@@ -250,15 +251,15 @@ export function LCARSStatusPanel() {
               <div
                 className="lcars-channel-diamond"
                 style={{
-                  backgroundColor: ch.status === "connected" ? ch.color : "var(--lcars-text-dim)",
+                  backgroundColor: ch.status === "connected" ? ch.color : "var(--color-tertiary)",
                   opacity: ch.status === "connected" ? 1 : 0.4,
                 }}
               />
               <span style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "10px",
+                fontFamily: "var(--font-family)",
+                fontSize: "1rem",
                 letterSpacing: "0.12em",
-                color: ch.status === "connected" ? "var(--lcars-text)" : "var(--lcars-text-dim)",
+                color: ch.status === "connected" ? "var(--color-primary-text)" : "var(--color-tertiary)",
               }}>
                 {ch.name}
               </span>
@@ -274,9 +275,9 @@ export function LCARSStatusPanel() {
           ref={hexRef}
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "8px",
+            fontSize: "0.8rem",
             lineHeight: "1.6",
-            color: "var(--lcars-text-dim)",
+            color: "var(--color-tertiary)",
             opacity: 0.3,
             overflow: "hidden",
             maxHeight: "120px",
@@ -293,7 +294,7 @@ export function LCARSStatusPanel() {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, var(--lcars-blue), var(--lcars-purple), var(--lcars-amber))", flexShrink: 0 }} />
+      <div style={{ height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, var(--color-tertiary-hover), var(--color-purple), var(--color-quaternary))", flexShrink: 0 }} />
     </aside>
   );
 }

@@ -36,8 +36,6 @@ interface StatusData {
   gateway: string;
   memoryCount: number;
   cronCount: number;
-  cpuLoad: string;
-  memoryPct: string;
 }
 
 export function LCARSNav() {
@@ -47,8 +45,6 @@ export function LCARSNav() {
     gateway: "...",
     memoryCount: 0,
     cronCount: 0,
-    cpuLoad: "0.00",
-    memoryPct: "0%",
   });
 
   useEffect(() => {
@@ -89,20 +85,14 @@ export function LCARSNav() {
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
   return (
-    <div className="lcars-boot-2" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-      {/* Rounded title bar */}
-      <div className="lcars-titlebar">
-        <span className="lcars-titlebar-title">SCOTTY CMD BRIDGE</span>
-        <span className="lcars-titlebar-time">{time}</span>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem" }}>
+      {/* Title + Time */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "0 0 0.4rem 0" }}>
+        <span className="lcars-sidebar-title">SCOTTY</span>
+        <span className="lcars-sidebar-time">{time}</span>
       </div>
 
-      {/* Color stripes */}
-      <div className="lcars-stripe-row">
-        <div className="lcars-stripe-purple" />
-        <div className="lcars-stripe-amber" />
-      </div>
-
-      {/* Status panel — golden amber */}
+      {/* Status panel — quaternary accent */}
       <div className="lcars-sidebar-status">
         <div className="lcars-status-header-row">STATUS-47C</div>
         <div className={status.gateway === "ONLINE" ? "lcars-status-active-row" : "lcars-status-standby-row"}>
@@ -125,7 +115,8 @@ export function LCARSNav() {
         </div>
       </div>
 
-      {/* Nav panel — blue */}
+      {/* Main nav — section label right-aligned */}
+      <div className="lcars-nav-section-label">Operations</div>
       <div className="lcars-nav-panel">
         {mainNav.map((item) => (
           <Link
@@ -139,7 +130,8 @@ export function LCARSNav() {
         ))}
       </div>
 
-      {/* Purple panel — systems */}
+      {/* System nav */}
+      <div className="lcars-nav-section-label">Systems</div>
       <div className="lcars-nav-panel-purple">
         {systemNav.map((item) => (
           <Link

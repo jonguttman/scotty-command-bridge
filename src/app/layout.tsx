@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "Scotty Command Bridge — OpenClaw",
   description: "LCARS Mission Control for OpenClaw agents",
   manifest: "/manifest.json",
-  themeColor: "#141418",
+  themeColor: "#000000",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
