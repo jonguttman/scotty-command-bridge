@@ -128,6 +128,9 @@ export default function BridgePage() {
         </div>
       </div>
 
+      {/* ── ORANGE DIVIDER ──────────────────────────── */}
+      <div style={{height: '0.4rem', background: 'linear-gradient(90deg, transparent 0%, #915e4d 20%, #d4690a 50%, #915e4d 80%, transparent 100%)', margin: '0 0 var(--gap) 0'}} />
+
       {/* ── TOTAL QUERIES (Activity Chart) ────────────── */}
       <div className="content-panel">
         <div className="content-panel-header">
@@ -138,6 +141,11 @@ export default function BridgePage() {
           <div className="chart-area">
             {heights.map((h, i) => (
               <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
+            ))}
+          </div>
+          <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
+            {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
+              <span key={t}>{t}</span>
             ))}
           </div>
           <div className="edge-label">
@@ -156,6 +164,11 @@ export default function BridgePage() {
           <div className="chart-area" style={{ height: 140 }}>
             {heights.slice(0, 24).map((h, i) => (
               <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
+            ))}
+          </div>
+          <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
+            {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
+              <span key={t}>{t}</span>
             ))}
           </div>
           <div className="edge-label">

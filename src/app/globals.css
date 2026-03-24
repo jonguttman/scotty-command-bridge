@@ -266,7 +266,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0.8rem var(--gap) 0.8rem calc(var(--gap) * 0.25);
-  background: var(--panel);
+  background: transparent;
   color: var(--panel-text);
   font-size: 1.4rem;
   text-transform: uppercase;
@@ -281,7 +281,7 @@ body {
 }
 
 .nav-item:hover {
-  background: var(--hover);
+  background: rgba(255,255,255,0.08);
   color: var(--hover-text);
 }
 
@@ -301,7 +301,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0.8rem var(--gap) 0.8rem calc(var(--gap) * 0.25);
-  background: var(--panel);
+  background: transparent;
   color: var(--panel-text);
   font-size: 1.4rem;
   text-transform: uppercase;
@@ -316,7 +316,7 @@ body {
 }
 
 .nav-item-link:hover {
-  background: var(--hover);
+  background: rgba(255,255,255,0.08);
   color: var(--hover-text);
 }
 
@@ -378,6 +378,16 @@ body {
   overflow: hidden;
 }
 
+/* Highlighted stat card (errors/blocked) */
+.stat-card.highlighted {
+  background: var(--active);
+  border: 0.2rem solid #c87050;
+}
+.stat-card.highlighted .stat-card-label,
+.stat-card.highlighted .stat-card-value { color: #fff; }
+.stat-card.highlighted .stat-card-icon { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.5); }
+.stat-card.highlighted .stat-card-footer { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+
 /* Pi-hole uses all same color — accent comes from border/position */
 .stat-card:first-child { border-radius: var(--radius) 0 0 0; }
 .stat-card:last-child { border-radius: 0 var(--radius) 0 0; }
@@ -436,6 +446,8 @@ body {
   background: var(--panel);
   margin-bottom: var(--gap);
   position: relative;
+  border-right: 0.6rem solid var(--active);
+  border-radius: 0 var(--radius) var(--radius) 0;
 }
 
 .content-panel-header {
