@@ -44,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${antonio.variable} ${spaceMono.variable} ${jetbrainsMono.variable}`}>
       <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
         <script dangerouslySetInnerHTML={{__html:`if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js")`}} />
       </head>
       <body className="app-wrapper">

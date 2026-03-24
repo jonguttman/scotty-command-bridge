@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface Agent {
@@ -77,18 +77,8 @@ export default function BridgePage() {
 
   const onlineCount = agents.filter((a) => a.status === "online").length;
 
-  // Generate pseudo-random chart bars
-  const chartBars = useMemo(() =>
-    Array.from({ length: 24 }, (_, i) => {
-      const h = Math.sin(i * 0.7 + 2) * 40 + Math.cos(i * 1.3) * 20 + 50;
-      return Math.max(5, Math.min(95, Math.round(h)));
-    }), []);
-
-  const clientBars = useMemo(() =>
-    Array.from({ length: 24 }, (_, i) => {
-      const h = Math.cos(i * 0.5 + 1) * 30 + Math.sin(i * 1.1) * 15 + 35;
-      return Math.max(3, Math.min(80, Math.round(h)));
-    }), []);
+  // Deterministic chart bar heights
+  const heights = [20, 35, 28, 45, 32, 18, 42, 38, 25, 50, 30, 22, 48, 35, 28, 55, 40, 25, 38, 45, 20, 35, 50, 30, 42, 28, 18, 45, 35, 25, 48, 38, 30, 42, 55, 22, 35, 45, 28, 40, 18, 50, 35, 30, 42, 25, 48, 38];
 
   const channels = [
     { name: "TELEGRAM", connected: agents.some((a) => a.name?.toLowerCase().includes("telegram")), color: "#4499cc" },
@@ -106,7 +96,7 @@ export default function BridgePage() {
           <div className="stat-card-value">{agents.length === 0 ? "—" : onlineCount}</div>
           <div className="stat-card-icon">⊕</div>
           <Link href="/agents" className="stat-card-footer">
-            {onlineCount} active clients →
+            VIEW ALL SESSIONS →
           </Link>
         </div>
 
@@ -114,8 +104,8 @@ export default function BridgePage() {
           <div className="stat-card-label">Errors Today</div>
           <div className="stat-card-value">{stats.error}</div>
           <div className="stat-card-icon">⊘</div>
-          <Link href="/logs" className="stat-card-footer">
-            View error log →
+          <Link href="/files" className="stat-card-footer">
+            VIEW ERROR LOG →
           </Link>
         </div>
 
@@ -123,8 +113,8 @@ export default function BridgePage() {
           <div className="stat-card-label">Memory Entries</div>
           <div className="stat-card-value">{stats.total}</div>
           <div className="stat-card-icon">◎</div>
-          <Link href="/memory" className="stat-card-footer">
-            Search memory →
+          <Link href="/memory-bay" className="stat-card-footer">
+            SEARCH MEMORY BAY →
           </Link>
         </div>
 
@@ -132,8 +122,8 @@ export default function BridgePage() {
           <div className="stat-card-label">Cron Jobs</div>
           <div className="stat-card-value">{Object.keys(stats.byType).length}</div>
           <div className="stat-card-icon">⏱</div>
-          <Link href="/cron" className="stat-card-footer">
-            View schedule →
+          <Link href="/crons" className="stat-card-footer">
+            VIEW SCHEDULE →
           </Link>
         </div>
       </div>
@@ -146,12 +136,12 @@ export default function BridgePage() {
         </div>
         <div className="content-panel-body" style={{ paddingRight: 40 }}>
           <div className="chart-area">
-            {chartBars.map((h, i) => (
-              <div key={i} className="chart-bar" style={{ height: `${h}%` }} />
+            {heights.map((h, i) => (
+              <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
             ))}
           </div>
           <div className="edge-label">
-            <span>Queries-Over-Time</span>
+            <span>Activity-Over-Time</span>
           </div>
         </div>
       </div>
@@ -164,8 +154,8 @@ export default function BridgePage() {
         </div>
         <div className="content-panel-body" style={{ paddingRight: 40 }}>
           <div className="chart-area" style={{ height: 140 }}>
-            {clientBars.map((h, i) => (
-              <div key={i} className="chart-bar" style={{ height: `${h}%`, background: "var(--orange)" }} />
+            {heights.slice(0, 24).map((h, i) => (
+              <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
             ))}
           </div>
           <div className="edge-label">

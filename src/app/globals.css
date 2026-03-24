@@ -126,6 +126,18 @@ body {
   padding-top: 16px;
   gap: 12px;
   border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.app-icon-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: var(--rust);
+  border-radius: 0 0 0 8px;
 }
 
 .app-icon {
@@ -153,6 +165,7 @@ body {
   flex-direction: column;
   overflow-y: auto;
   border-right: 1px solid var(--border);
+  border-radius: 16px 0 0 0;
 }
 
 /* Status panel */
@@ -393,6 +406,18 @@ body {
   justify-content: space-between;
   padding: 10px 16px;
   border-bottom: 3px solid var(--rust);
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.content-panel-header::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--orange);
 }
 
 .content-panel-title {

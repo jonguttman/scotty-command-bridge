@@ -7,27 +7,28 @@ import { useEffect, useState } from "react";
 interface NavItem {
   href: string;
   label: string;
+  icon: string;
   badge?: string;
 }
 
 const mainNav: NavItem[] = [
-  { href: "/", label: "Dashboard" },
-  { href: "/activity", label: "Query Log" },
+  { href: "/", label: "Dashboard", icon: "fas fa-tachometer-alt" },
+  { href: "/activity", label: "Query Log", icon: "fas fa-list" },
 ];
 
 const groupNav: NavItem[] = [
-  { href: "/agents", label: "Groups", badge: "1" },
-  { href: "/analytics", label: "Clients", badge: "0" },
-  { href: "/memory", label: "Domains", badge: "0|0" },
-  { href: "/cron", label: "Lists", badge: "1" },
+  { href: "/agents", label: "Groups", icon: "fas fa-robot", badge: "1" },
+  { href: "/analytics", label: "Clients", icon: "fas fa-flask", badge: "0" },
+  { href: "/memory", label: "Domains", icon: "fas fa-brain", badge: "0|0" },
+  { href: "/cron", label: "Lists", icon: "fas fa-clock", badge: "1" },
 ];
 
 const systemNav: NavItem[] = [
-  { href: "/system", label: "Engineering" },
-  { href: "/terminal", label: "Terminal" },
-  { href: "/logs", label: "Comms" },
-  { href: "/git", label: "Helm" },
-  { href: "/files", label: "Files" },
+  { href: "/system", label: "Engineering", icon: "fas fa-bullseye" },
+  { href: "/terminal", label: "Terminal", icon: "fas fa-terminal" },
+  { href: "/logs", label: "Comms", icon: "fas fa-satellite-dish" },
+  { href: "/git", label: "Helm", icon: "fas fa-compass" },
+  { href: "/files", label: "Files", icon: "fas fa-folder" },
 ];
 
 interface StatusData {
@@ -83,7 +84,7 @@ export function LCARSNav() {
         href={item.href}
         className={`nav-item-link ${isActive(item.href) ? "active" : ""}`}
       >
-        <span className="nav-item-icon" />
+        <i className={item.icon} style={{width:'16px', fontSize:'12px', color:'var(--text-dim)', textAlign:'center'}} />
         <span>{item.label}</span>
         {item.badge && <span className="nav-badge">{item.badge}</span>}
       </Link>
