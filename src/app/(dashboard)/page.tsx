@@ -100,7 +100,7 @@ export default function BridgePage() {
           </Link>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card highlighted">
           <div className="stat-card-label">Errors Today</div>
           <div className="stat-card-value">{stats.error}</div>
           <div className="stat-card-icon">⊘</div>
@@ -138,15 +138,26 @@ export default function BridgePage() {
           <span className="content-panel-badge">{stats.total} total</span>
         </div>
         <div className="content-panel-body" style={{ paddingRight: 40 }}>
-          <div className="chart-area">
-            {heights.map((h, i) => (
-              <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
-            ))}
-          </div>
-          <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
-            {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
-              <span key={t}>{t}</span>
-            ))}
+          <div style={{display:'flex', gap:'0.4rem'}}>
+            <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between', padding:'0 0.4rem', fontSize:'0.9rem', fontFamily:'var(--font-mono)', color:'var(--hover)', textAlign:'right', minWidth:'2rem'}}>
+              <span>4</span>
+              <span>3</span>
+              <span>2</span>
+              <span>1</span>
+              <span>0</span>
+            </div>
+            <div style={{flex:1, position:'relative'}}>
+              <div className="chart-area">
+                {heights.map((h, i) => (
+                  <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
+                ))}
+              </div>
+              <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
+                {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
+                  <span key={t}>{t}</span>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="edge-label">
             <span>Activity-Over-Time</span>
@@ -161,15 +172,26 @@ export default function BridgePage() {
           <span className="content-panel-badge">{agents.length} agents</span>
         </div>
         <div className="content-panel-body" style={{ paddingRight: 40 }}>
-          <div className="chart-area" style={{ height: 140 }}>
-            {heights.slice(0, 24).map((h, i) => (
-              <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
-            ))}
-          </div>
-          <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
-            {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
-              <span key={t}>{t}</span>
-            ))}
+          <div style={{display:'flex', gap:'0.4rem'}}>
+            <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between', padding:'0 0.4rem', fontSize:'0.9rem', fontFamily:'var(--font-mono)', color:'var(--hover)', textAlign:'right', minWidth:'2rem'}}>
+              <span>4</span>
+              <span>3</span>
+              <span>2</span>
+              <span>1</span>
+              <span>0</span>
+            </div>
+            <div style={{flex:1, position:'relative'}}>
+              <div className="chart-area" style={{ height: 140 }}>
+                {heights.slice(0, 24).map((h, i) => (
+                  <div key={i} className="chart-bar" style={{ height: `${h}%`, flex: 1, background: 'linear-gradient(to top, #d4690a, #915e4d)', opacity: 0.8, borderRadius: '1px 1px 0 0' }} />
+                ))}
+              </div>
+              <div style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 3rem 0 0', fontSize:'0.9rem', color:'var(--hover)', fontFamily:'var(--font-mono)'}}>
+                {['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:00'].map(t => (
+                  <span key={t}>{t}</span>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="edge-label">
             <span>Clients</span>

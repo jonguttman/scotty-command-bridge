@@ -259,13 +259,19 @@ body {
 .nav-section-header {
   display: flex;
   justify-content: flex-end;
-  font-size: 1.1rem;
-  color: var(--hover-text);
+  font-size: 1.2rem;
+  color: #8a9ab8;
   text-transform: uppercase;
-  padding: calc(var(--gap) * 0.75) calc(var(--gap) * 0.5) 0 0;
+  padding: calc(var(--gap) * 0.75) calc(var(--gap) * 0.5) 0.4rem 0;
   border-top: calc(0.2rem * 10) solid #000;
+  letter-spacing: 0.1em;
   position: relative;
   z-index: 2;
+}
+
+/* First section header - no top border */
+.nav-section:first-of-type .nav-section-header {
+  border-top: none;
 }
 
 .nav-item {
@@ -446,9 +452,19 @@ body {
 
 .stat-card-footer:hover { color: #fff; }
 
+/* Highlighted stat card (rust) */
+.stat-card.highlighted {
+  background: #915e4d;
+}
+.stat-card.highlighted .stat-card-label { color: rgba(255,255,255,0.7); }
+.stat-card.highlighted .stat-card-value { color: #fff; }
+.stat-card.highlighted .stat-card-icon { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.4); }
+.stat-card.highlighted .stat-card-footer { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+.stat-card.highlighted .stat-card-footer:hover { color: #fff; }
+
 /* CONTENT PANELS */
 .content-panel {
-  background: var(--bg);
+  background: #1a1d24;
   margin-bottom: var(--gap);
   position: relative;
   border-right: 0.6rem solid var(--active);
@@ -456,6 +472,7 @@ body {
 }
 
 .content-panel-header {
+  background: #1e2129;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -525,12 +542,13 @@ body {
   gap: 0.2rem;
   padding-right: 3rem;
   background: repeating-linear-gradient(
-    0deg, transparent, transparent 2.9rem,
-    var(--chart-grid) 2.9rem, var(--chart-grid) 3rem
+    90deg, transparent, transparent 11.9%,
+    rgba(255,255,255,0.08) 11.9%, rgba(255,255,255,0.08) 12%
   ), repeating-linear-gradient(
-    90deg, transparent, transparent 5.9rem,
-    var(--chart-grid) 5.9rem, var(--chart-grid) 6rem
+    0deg, transparent, transparent 24.5%,
+    rgba(200,80,50,0.2) 24.5%, rgba(200,80,50,0.2) 25%
   );
+  position: relative;
 }
 
 .chart-bar {
@@ -606,6 +624,29 @@ body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--panel-text);
+}
+
+/* Sidebar icon strip */
+.sidebar-icon-strip {
+  width: 3.2rem;
+  background: #1a1d24;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--gap) 0;
+  gap: var(--gap);
+  flex-shrink: 0;
+  border-radius: var(--radius-lcars) 0 0 0;
+}
+
+.sidebar-icon-strip i {
+  font-size: 1.1rem;
+  color: #53596c;
+  transition: color 0.2s;
+}
+
+.sidebar-icon-strip i:hover {
+  color: #9fa5b8;
 }
 
 /* Scrollbar */
