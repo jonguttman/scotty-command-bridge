@@ -162,7 +162,7 @@ body {
 
 /* STATUS PANEL */
 .status-panel {
-  padding: 0.8rem 0 1.2rem;
+  padding: 0 0 0;
   border-bottom: 0.2rem solid rgba(0,0,0,0.2);
   position: relative;
   z-index: 2;
@@ -234,7 +234,7 @@ body {
   font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0,0,0,0.65);
   flex: 1;
 }
 
@@ -242,6 +242,7 @@ body {
   font-family: var(--font-mono);
   font-size: 1rem;
   color: #000;
+  font-weight: 600;
 }
 
 /* NAV */
@@ -377,16 +378,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
-/* Highlighted stat card (errors/blocked) */
-.stat-card.highlighted {
-  background: var(--active);
-  border: 0.2rem solid #c87050;
-}
-.stat-card.highlighted .stat-card-label,
-.stat-card.highlighted .stat-card-value { color: #fff; }
-.stat-card.highlighted .stat-card-icon { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.5); }
-.stat-card.highlighted .stat-card-footer { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
 
 /* Pi-hole uses all same color — accent comes from border/position */
 .stat-card:first-child { border-radius: var(--radius) 0 0 0; }

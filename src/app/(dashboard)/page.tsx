@@ -100,7 +100,7 @@ export default function BridgePage() {
           </Link>
         </div>
 
-        <div className="stat-card highlighted">
+        <div className="stat-card">
           <div className="stat-card-label">Errors Today</div>
           <div className="stat-card-value">{stats.error}</div>
           <div className="stat-card-icon">⊘</div>

@@ -96,24 +96,19 @@ export function LCARSNav() {
     <nav style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%" }}>
       {/* Status Panel */}
       <div className="status-panel">
-        <div className="status-panel-header">STATUS_PANEL-47A</div>
+        <div style={{display:'flex', gap:'1.2rem', padding:'1.2rem 1rem'}}>
+          <div style={{fontSize:'4rem', lineHeight:1}}>🦞</div>
+          <div style={{flex:1}}>
+            <div className="status-panel-id">SCOTTY</div>
+            <div style={{fontSize:'1rem', textTransform:'uppercase', letterSpacing:'0.08em'}}>
+              <div className="status-row"><span className={`status-dot ${isOnline ? "green" : "orange"}`}/><span className="status-label">GATEWAY</span><span className="status-value">{isOnline ? "ONLINE" : "OFFLINE"}</span></div>
+              <div className="status-row"><span className="status-dot blue"/><span className="status-label">MEMORY</span><span className="status-value">{status.memoryCount}</span></div>
+              <div className="status-row"><span className="status-dot blue"/><span className="status-label">CRON JOBS</span><span className="status-value">{status.cronCount}</span></div>
+            </div>
+          </div>
+        </div>
         <div className={isOnline ? "status-active-bar" : "status-standby-bar"}>
           {isOnline ? "ACTIVE" : "STANDBY"}
-        </div>
-        <div className="status-row">
-          <div className={`status-dot ${isOnline ? "green" : "orange"}`} />
-          <span className="status-label">Q/Min</span>
-          <span className="status-value">0.00</span>
-        </div>
-        <div className="status-row">
-          <div className="status-dot blue" />
-          <span className="status-label">Load</span>
-          <span className="status-value">{status.load}</span>
-        </div>
-        <div className="status-row">
-          <div className="status-dot teal" />
-          <span className="status-label">Memory</span>
-          <span className="status-value">{status.memoryPct}%</span>
         </div>
       </div>
 
