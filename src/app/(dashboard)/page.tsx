@@ -94,7 +94,7 @@ export default function BridgePage() {
         <div className="lcars-stat-card teal">
           <div>
             <div className="lcars-stat-label">Active Sessions</div>
-            <div className="lcars-stat-value">{onlineCount}</div>
+            <div className="lcars-stat-value">{agents.length === 0 ? "—" : onlineCount}</div>
           </div>
           <div className="lcars-stat-card-icon">🌐</div>
           <Link href="/agents" className="lcars-stat-footer">
@@ -146,8 +146,17 @@ export default function BridgePage() {
           </div>
           <div className="lcars-panel-body">
             {agents.length === 0 ? (
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#556677", padding: "6px 0" }}>
-                NO AGENTS DETECTED
+              <div style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: 11,
+                color: "#556677",
+                padding: "16px 0",
+                textAlign: "center",
+                letterSpacing: "0.2em",
+                fontVariant: "small-caps",
+                fontWeight: 700,
+              }}>
+                no agents detected
               </div>
             ) : (
               agents.slice(0, 6).map((agent) => (

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&family=Space+Mono:wght@400;700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -79,14 +80,14 @@
   --type-build-bg: rgba(255, 153, 0, 0.12);
 
   /* Typography */
-  --font-heading: var(--font-antonio), 'Antonio', system-ui, sans-serif;
-  --font-body: var(--font-antonio), 'Antonio', system-ui, sans-serif;
-  --font-mono: var(--font-space-mono), 'Space Mono', monospace;
+  --font-heading: var(--font-antonio), "Antonio", sans-serif;
+  --font-body: var(--font-antonio), "Antonio", sans-serif;
+  --font-mono: var(--font-space-mono), "Space Mono", monospace;
 
   /* Spacing */
-  --radius-sm: 2px;
-  --radius-md: 4px;
-  --radius-lg: 8px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
   --lcars-radius: 2px;
 
   /* Shadows */
@@ -275,15 +276,18 @@ code, pre, .font-mono {
   padding: 0 12px;
   flex-shrink: 0;
   z-index: 50;
+  font-family: var(--font-heading);
 }
 .lcars-topstrip-left {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 9px;
+  font-size: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #ff6600;
+  color: #ff9900;
 }
 .lcars-topstrip-indicator {
   width: 8px;
@@ -339,12 +343,14 @@ code, pre, .font-mono {
   background: #1e2028;
   border-radius: 50px;
   margin: 8px 4px;
-  padding: 6px 16px;
+  padding: 6px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 44px;
   flex-shrink: 0;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .lcars-titlebar-title {
@@ -353,7 +359,11 @@ code, pre, .font-mono {
   text-transform: uppercase;
   color: #ddeeff;
   font-family: var(--font-heading);
+  font-weight: 700;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .lcars-titlebar-time {
@@ -385,7 +395,7 @@ code, pre, .font-mono {
 /* STATUS PANEL — golden amber */
 .lcars-sidebar-status {
   background: #d4880a;
-  border-radius: 4px 4px 0 0;
+  border-radius: 2px 2px 0 0;
   margin: 0 4px 2px;
   padding-bottom: 6px;
 }
@@ -474,8 +484,8 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   padding: 9px 10px 9px 12px;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-size: 12px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: #000;
   cursor: pointer;
@@ -485,7 +495,7 @@ code, pre, .font-mono {
   border-radius: 0;
   background: transparent;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-heading);
   position: relative;
 }
@@ -572,7 +582,7 @@ code, pre, .font-mono {
 }
 
 .lcars-stat-card {
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 12px 14px;
   position: relative;
   overflow: hidden;
@@ -618,6 +628,7 @@ code, pre, .font-mono {
 .lcars-stat-value {
   font-size: 34px;
   font-family: var(--font-heading);
+  font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -675,11 +686,12 @@ code, pre, .font-mono {
   background: #242730;
 }
 .lcars-panel-title {
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  font-size: 11px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #ff6600;
+  color: #ff9900;
   font-family: var(--font-heading);
+  font-weight: 700;
 }
 .lcars-panel-badge {
   font-size: 8px;
