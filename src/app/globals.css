@@ -52,11 +52,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--gap) 0 calc(var(--gap) * 3);
+  padding: 0 var(--gap) 0 var(--gap);
   flex-shrink: 0;
   border-radius: 0 0 0 var(--radius);
   position: relative;
   z-index: 10;
+  margin: 0 var(--gap) 0 var(--gap);
 }
 
 .app-header-brand {
