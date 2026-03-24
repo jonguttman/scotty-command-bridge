@@ -305,19 +305,23 @@ body {
 .nav-item-link {
   display: flex;
   align-items: center;
-  padding: 0.8rem var(--gap) 0.8rem calc(var(--gap) * 0.25);
+  padding: 0.7rem 0.8rem 0.7rem 0.8rem;
+  margin: 0.1rem 0.4rem;
   background: transparent;
   color: var(--panel-text);
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color var(--transition);
   text-decoration: none;
-  gap: var(--gap);
+  gap: 0.8rem;
   position: relative;
   z-index: 2;
   border: none;
-  width: 100%;
+  width: calc(100% - 0.8rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav-item-link:hover {
