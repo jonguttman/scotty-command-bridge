@@ -35,8 +35,12 @@ interface StatusData {
   gateway: string;
   memoryCount: number;
   cronCount: number;
-  load: string;
-  memoryPct: string;
+}
+
+interface ChannelStatus {
+  status: "online" | "offline" | "degraded" | "unknown";
+  lastCheck: string;
+  detail?: string;
 }
 
 export function LCARSNav() {
@@ -45,9 +49,8 @@ export function LCARSNav() {
     gateway: "...",
     memoryCount: 0,
     cronCount: 0,
-    load: "0.00",
-    memoryPct: "0.0",
   });
+  const [comms, setComms] = useState<Record<string, ChannelStatus>>({});
 
   useEffect(() => {
     Promise.all([
@@ -60,18 +63,24 @@ export function LCARSNav() {
         .catch(() => 0),
       fetch("/api/cron")
         .then((r) => r.json())
-        .then((d) => (d.jobs || d.crons || []).length)
+        .then((d) => (Array.isArray(d) ? d : d.jobs || d.crons || []).length)
         .catch(() => 0),
     ]).then(([gateway, memoryCount, cronCount]) => {
-      setStatus((prev) => ({
-        ...prev,
-        gateway,
-        memoryCount,
-        cronCount,
-        load: "0.33 0.28 0.25",
-        memoryPct: "9.1",
-      }));
+      setStatus({ gateway, memoryCount, cronCount });
     });
+  }, []);
+
+  // Comms status polling
+  useEffect(() => {
+    const load = () => {
+      fetch("/api/comms-status")
+        .then((r) => r.json())
+        .then((d) => { if (!d.error) setComms(d); })
+        .catch(() => {});
+    };
+    load();
+    const id = setInterval(load, 60_000);
+    return () => clearInterval(id);
   }, []);
 
   const isActive = (href: string) =>
@@ -84,7 +93,7 @@ export function LCARSNav() {
         href={item.href}
         className={`nav-item-link ${isActive(item.href) ? "active" : ""}`}
       >
-        <i className={item.icon} style={{width:'16px', fontSize:'12px', color:'var(--text-dim)', textAlign:'center'}} />
+        <i className={item.icon} style={{ width: "16px", fontSize: "12px", color: "var(--text-dim)", textAlign: "center" }} />
         <span>{item.label}</span>
         {item.badge && <span className="nav-badge">{item.badge}</span>}
       </Link>
@@ -92,17 +101,69 @@ export function LCARSNav() {
 
   const isOnline = status.gateway === "ONLINE";
 
+  const channels = [
+    { key: "telegram", label: "TG", color: "#4499cc" },
+    { key: "slack", label: "SL", color: "#9966cc" },
+    { key: "imessage", label: "IM", color: "#00cc66" },
+    { key: "gmail", label: "GM", color: "#cc4400" },
+  ];
+
   return (
     <nav style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%" }}>
       {/* Status Panel */}
       <div className="status-panel">
-        <div className="status-panel-id">STATUS_PANEL-47C</div>
+        <div className="status-panel-id">COMMS STATUS</div>
         <div className={isOnline ? "status-active-bar" : "status-standby-bar"}>
           {isOnline ? "ACTIVE" : "STANDBY"}
         </div>
-        <div className="status-row"><span className={`status-dot ${isOnline ? "green" : "orange"}`}/><span className="status-label">GATEWAY</span><span className="status-value">{isOnline ? "ONLINE" : "OFFLINE"}</span></div>
-        <div className="status-row"><span className="status-dot blue"/><span className="status-label">MEMORY</span><span className="status-value">{status.memoryCount}</span></div>
-        <div className="status-row"><span className="status-dot blue"/><span className="status-label">CRON JOBS</span><span className="status-value">{status.cronCount}</span></div>
+        <div className="status-row">
+          <span className={`status-dot ${isOnline ? "green" : "orange"}`} />
+          <span className="status-label">GATEWAY</span>
+          <span className="status-value">{isOnline ? "ONLINE" : "OFFLINE"}</span>
+        </div>
+        <div className="status-row">
+          <span className="status-dot blue" />
+          <span className="status-label">MEMORY</span>
+          <span className="status-value">{status.memoryCount}</span>
+        </div>
+        <div className="status-row">
+          <span className="status-dot blue" />
+          <span className="status-label">CRON JOBS</span>
+          <span className="status-value">{status.cronCount}</span>
+        </div>
+        {/* Channel status dots */}
+        <div style={{ display: "flex", gap: "0.3rem", padding: "0.5rem 0.8rem 0.4rem", flexWrap: "wrap" }}>
+          {channels.map((ch) => {
+            const s = comms[ch.key];
+            const up = s?.status === "online";
+            const degraded = s?.status === "degraded";
+            return (
+              <div
+                key={ch.key}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.25rem",
+                  fontSize: "0.85rem",
+                  fontFamily: "var(--font-mono)",
+                  color: "rgba(0,0,0,0.6)",
+                }}
+                title={`${ch.label}: ${s?.status || "unknown"}${s?.detail ? ` — ${s.detail}` : ""}`}
+              >
+                <span
+                  style={{
+                    width: "0.5rem",
+                    height: "0.5rem",
+                    borderRadius: "50%",
+                    background: up ? ch.color : degraded ? "#d4690a" : "var(--danger)",
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ fontWeight: 600 }}>{ch.label}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Main Navigation */}
