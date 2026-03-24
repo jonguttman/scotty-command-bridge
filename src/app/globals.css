@@ -115,14 +115,15 @@ body {
 
 /* SIDEBAR OUTER - creates bottom-left LCARS curve */
 .app-sidebar-outer {
-  width: calc(var(--sidebar-width) + 0.4rem);
+  width: calc(var(--sidebar-width) + 0.8rem);
   flex-shrink: 0;
   background: linear-gradient(0deg, var(--sidebar-inner) 88%, var(--bg) 88%);
   border-radius: 0 0 0 var(--radius-lcars);
   display: flex;
-  padding-left: 0.4rem;
-  padding-bottom: 0.4rem;
+  padding-left: 0.8rem;
+  padding-bottom: 0.8rem;
   position: relative;
+  margin-left: 0.4rem;
 }
 
 /* SIDEBAR INNER - creates top-left LCARS curve */
