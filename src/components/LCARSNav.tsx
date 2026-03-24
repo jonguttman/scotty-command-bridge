@@ -144,9 +144,10 @@ export function LCARSNav() {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.25rem",
-                  fontSize: "0.85rem",
+                  fontSize: "1.1rem",
                   fontFamily: "var(--font-mono)",
-                  color: "rgba(0,0,0,0.6)",
+                  color: "#000",
+                  fontWeight: 600,
                 }}
                 title={`${ch.label}: ${s?.status || "unknown"}${s?.detail ? ` — ${s.detail}` : ""}`}
               >
@@ -155,7 +156,7 @@ export function LCARSNav() {
                     width: "0.5rem",
                     height: "0.5rem",
                     borderRadius: "50%",
-                    background: up ? ch.color : degraded ? "#d4690a" : "var(--danger)",
+                    background: up ? "#0bd08a" : degraded ? "#80c8ec" : "var(--danger)",
                     flexShrink: 0,
                   }}
                 />
