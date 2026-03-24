@@ -32,7 +32,7 @@ export function LCARSTopBar() {
   return (
     <header className="app-header">
       <div className="app-header-brand">
-        <div className="app-header-dot" />
+        <span style={{fontSize:'1.8rem', lineHeight:1}}>🦞</span>
         <span>SCOTTY — NCC-1701-OC</span>
       </div>
       <div className="app-header-right">
