@@ -381,8 +381,9 @@ body {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  gap: 0.4rem;
   margin-bottom: var(--gap);
+  background: var(--bg);
 }
 
 .stat-card {
@@ -447,7 +448,7 @@ body {
 
 /* CONTENT PANELS */
 .content-panel {
-  background: var(--panel);
+  background: var(--bg);
   margin-bottom: var(--gap);
   position: relative;
   border-right: 0.6rem solid var(--active);
