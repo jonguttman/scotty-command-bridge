@@ -115,19 +115,25 @@ export function LCARSNav() {
       {/* Main Navigation */}
       <div className="nav-section">
         <div className="nav-section-header">Main</div>
-        {renderNavItems(mainNav)}
+        <div className="nav-panel">
+          {renderNavItems(mainNav)}
+        </div>
       </div>
 
       {/* Group Management */}
       <div className="nav-section">
         <div className="nav-section-header">Group Management</div>
-        {renderNavItems(groupNav)}
+        <div className="nav-panel">
+          {renderNavItems(groupNav)}
+        </div>
       </div>
 
       {/* Systems */}
       <div className="nav-section">
         <div className="nav-section-header">Systems</div>
-        {renderNavItems(systemNav)}
+        <div className="nav-panel">
+          {renderNavItems(systemNav)}
+        </div>
       </div>
     </nav>
   );

@@ -21,7 +21,7 @@
   --radius-lcars: 3.2rem;
   --font: Antonio, "Roboto Condensed", sans-serif;
   --font-mono: "Ubuntu Mono", "Courier New", monospace;
-  --sidebar-width: 22.4rem;
+  --sidebar-width: 25rem;
   --header-height: 5rem;
   --transition: 0.6s cubic-bezier(0.33, 1, 0.68, 1);
 }
@@ -246,6 +246,13 @@ body {
 }
 
 /* NAV */
+.nav-panel {
+  background: var(--panel);
+  border-radius: 0.4rem;
+  margin: 0 0 0.4rem 0;
+  overflow: hidden;
+}
+
 .nav-section {
   position: relative;
   z-index: 2;
@@ -306,10 +313,10 @@ body {
   display: flex;
   align-items: center;
   padding: 0.7rem 0.8rem 0.7rem 0.8rem;
-  margin: 0.1rem 0.4rem;
+  margin: 0;
   background: transparent;
   color: var(--panel-text);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color var(--transition);
@@ -318,7 +325,7 @@ body {
   position: relative;
   z-index: 2;
   border: none;
-  width: calc(100% - 0.8rem);
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
