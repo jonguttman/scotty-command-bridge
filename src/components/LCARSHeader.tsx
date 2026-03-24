@@ -14,30 +14,33 @@ function calculateStardate(): string {
 
 export function LCARSTopBar() {
   const [stardate, setStardate] = useState("");
+  const [hostname, setHostname] = useState("NCC-1701-OC");
 
   useEffect(() => {
-    const update = () => {
-      setStardate(calculateStardate());
-    };
+    const update = () => setStardate(calculateStardate());
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHostname(window.location.hostname.toUpperCase() || "NCC-1701-OC");
+    }
+  }, []);
+
   return (
-    <nav className="lcars-header main-header navbar navbar-expand navbar-dark lcars-boot-1">
-      <div className="lcars-header-inner container-fluid">
-        <div className="lcars-header-left">
-          <span className="logo-lg">SCOTTY &mdash; NCC-1701-OC</span>
-          <div className="lcars-header-indicator rust" />
-          <div className="lcars-header-indicator blue" />
-          <div className="lcars-header-indicator primary" />
-        </div>
-        <ul className="lcars-header-right navbar-nav ml-auto">
-          <li className="nav-item">SD {stardate}</li>
-        </ul>
+    <header className="app-header">
+      <div className="app-header-left">
+        <div className="app-header-dot" />
+        <span>Pi-hole</span>
+        <span style={{ fontSize: 14, opacity: 0.4 }}>□</span>
       </div>
-    </nav>
+      <div className="app-header-right">
+        <div className="app-header-hostname">{hostname}</div>
+        <div className="app-header-menu">≡</div>
+      </div>
+    </header>
   );
 }
 

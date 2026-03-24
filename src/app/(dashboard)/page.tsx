@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 
 interface Agent {
@@ -13,15 +13,6 @@ interface Agent {
   lastActivity?: string;
 }
 
-interface Activity {
-  id: string;
-  type: string;
-  description: string;
-  channel?: string;
-  created_at: string;
-  status: string;
-}
-
 interface Stats {
   total: number;
   today: number;
@@ -29,6 +20,15 @@ interface Stats {
   error: number;
   byType: Record<string, number>;
   lastActivity?: string;
+}
+
+interface Activity {
+  id: string;
+  type: string;
+  description: string;
+  channel?: string;
+  created_at: string;
+  status: string;
 }
 
 function timeAgo(dateStr: string): string {
@@ -73,110 +73,132 @@ export default function BridgePage() {
     });
   }, []);
 
-  useEffect(() => {
-    setElapsed(daysSinceLaunch());
-  }, []);
+  useEffect(() => { setElapsed(daysSinceLaunch()); }, []);
 
   const onlineCount = agents.filter((a) => a.status === "online").length;
-  const cronCount = Object.values(stats.byType).reduce((a, b) => a + b, 0);
+
+  // Generate pseudo-random chart bars
+  const chartBars = useMemo(() =>
+    Array.from({ length: 24 }, (_, i) => {
+      const h = Math.sin(i * 0.7 + 2) * 40 + Math.cos(i * 1.3) * 20 + 50;
+      return Math.max(5, Math.min(95, Math.round(h)));
+    }), []);
+
+  const clientBars = useMemo(() =>
+    Array.from({ length: 24 }, (_, i) => {
+      const h = Math.cos(i * 0.5 + 1) * 30 + Math.sin(i * 1.1) * 15 + 35;
+      return Math.max(3, Math.min(80, Math.round(h)));
+    }), []);
 
   const channels = [
-    { name: "TELEGRAM", connected: agents.some((a) => a.name?.toLowerCase().includes("telegram") || (a as any).botToken), color: "#4499cc" },
+    { name: "TELEGRAM", connected: agents.some((a) => a.name?.toLowerCase().includes("telegram")), color: "#4499cc" },
     { name: "SLACK", connected: true, color: "#9966cc" },
     { name: "IMESSAGE", connected: true, color: "#00cc66" },
     { name: "GMAIL", connected: true, color: "#cc4400" },
   ];
 
   return (
-    <div className="lcars-data-bg">
-      {/* Stat Grid — 4 colored cards */}
-      <div className="lcars-stat-grid" style={{ animation: "lcars-slide-up 0.3s ease-out 0.2s both" }}>
-        <div className="lcars-stat-card teal">
-          <div>
-            <div className="lcars-stat-label">Active Sessions</div>
-            <div className="lcars-stat-value">{agents.length === 0 ? "—" : onlineCount}</div>
-          </div>
-          <div className="lcars-stat-card-icon">🌐</div>
-          <Link href="/agents" className="lcars-stat-footer">
-            VIEW ALL SESSIONS →
+    <div>
+      {/* ── STAT GRID ─────────────────────────────────── */}
+      <div className="stat-grid">
+        <div className="stat-card">
+          <div className="stat-card-label">Active Sessions</div>
+          <div className="stat-card-value">{agents.length === 0 ? "—" : onlineCount}</div>
+          <div className="stat-card-icon">⊕</div>
+          <Link href="/agents" className="stat-card-footer">
+            {onlineCount} active clients →
           </Link>
         </div>
 
-        <div className="lcars-stat-card rust">
-          <div>
-            <div className="lcars-stat-label">Memory Entries</div>
-            <div className="lcars-stat-value">{stats.total}</div>
-          </div>
-          <div className="lcars-stat-card-icon">🧠</div>
-          <Link href="/memory" className="lcars-stat-footer">
-            SEARCH MEMORY →
+        <div className="stat-card highlighted">
+          <div className="stat-card-label">Errors Today</div>
+          <div className="stat-card-value">{stats.error}</div>
+          <div className="stat-card-icon">⊘</div>
+          <Link href="/logs" className="stat-card-footer">
+            View error log →
           </Link>
         </div>
 
-        <div className="lcars-stat-card amber">
-          <div>
-            <div className="lcars-stat-label">Scheduled Tasks</div>
-            <div className="lcars-stat-value">{cronCount}</div>
-          </div>
-          <div className="lcars-stat-card-icon">⏰</div>
-          <Link href="/cron" className="lcars-stat-footer">
-            VIEW SCHEDULE →
+        <div className="stat-card">
+          <div className="stat-card-label">Memory Entries</div>
+          <div className="stat-card-value">{stats.total}</div>
+          <div className="stat-card-icon">◎</div>
+          <Link href="/memory" className="stat-card-footer">
+            Search memory →
           </Link>
         </div>
 
-        <div className="lcars-stat-card green">
-          <div>
-            <div className="lcars-stat-label">Mission Uptime</div>
-            <div className="lcars-stat-value">{elapsed}</div>
-          </div>
-          <div className="lcars-stat-card-icon">⚡</div>
-          <Link href="/logs" className="lcars-stat-footer">
-            VIEW LOGS →
+        <div className="stat-card">
+          <div className="stat-card-label">Cron Jobs</div>
+          <div className="stat-card-value">{Object.keys(stats.byType).length}</div>
+          <div className="stat-card-icon">⏱</div>
+          <Link href="/cron" className="stat-card-footer">
+            View schedule →
           </Link>
         </div>
       </div>
 
-      {/* Two columns: Agent Status + Channel Status */}
-      <div className="lcars-grid-2" style={{ marginBottom: 10, animation: "lcars-slide-up 0.3s ease-out 0.4s both" }}>
-        {/* Agent Status Panel */}
-        <div className="lcars-panel">
-          <div className="lcars-panel-header">
-            <span className="lcars-panel-title">Agent Status</span>
-            <span className="lcars-panel-badge">{onlineCount}/{agents.length} ONLINE</span>
+      {/* ── TOTAL QUERIES (Activity Chart) ────────────── */}
+      <div className="content-panel">
+        <div className="content-panel-header">
+          <span className="content-panel-title">Total Queries</span>
+          <span className="content-panel-badge">{stats.total} total</span>
+        </div>
+        <div className="content-panel-body" style={{ paddingRight: 40 }}>
+          <div className="chart-area">
+            {chartBars.map((h, i) => (
+              <div key={i} className="chart-bar" style={{ height: `${h}%` }} />
+            ))}
           </div>
-          <div className="lcars-panel-body">
+          <div className="edge-label">
+            <span>Queries-Over-Time</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── CLIENT ACTIVITY ───────────────────────────── */}
+      <div className="content-panel">
+        <div className="content-panel-header">
+          <span className="content-panel-title">Client Activity</span>
+          <span className="content-panel-badge">{agents.length} agents</span>
+        </div>
+        <div className="content-panel-body" style={{ paddingRight: 40 }}>
+          <div className="chart-area" style={{ height: 140 }}>
+            {clientBars.map((h, i) => (
+              <div key={i} className="chart-bar" style={{ height: `${h}%`, background: "var(--orange)" }} />
+            ))}
+          </div>
+          <div className="edge-label">
+            <span>Clients</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── TWO COLUMNS: Agents + Channels ────────────── */}
+      <div className="grid-2">
+        {/* Agent Status */}
+        <div className="content-panel">
+          <div className="content-panel-header">
+            <span className="content-panel-title">Agent Status</span>
+            <span className="content-panel-badge">{onlineCount}/{agents.length} online</span>
+          </div>
+          <div className="content-panel-body">
             {agents.length === 0 ? (
-              <div style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: 13,
-                color: "#c89020",
-                padding: "20px 0",
-                textAlign: "center",
-                letterSpacing: "0.25em",
-                fontVariant: "small-caps",
-                fontWeight: 700,
-              }}>
-                no agents detected
+              <div style={{ fontSize: 11, color: "var(--text-dim)", padding: "12px 0", textAlign: "center", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                No agents detected
               </div>
             ) : (
               agents.slice(0, 6).map((agent) => (
-                <div key={agent.id} className="lcars-data-row">
+                <div key={agent.id} className="data-row">
                   <span
+                    className="status-dot"
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      backgroundColor: agent.status === "online" ? "#00cc66" : "#556677",
-                      flexShrink: 0,
+                      width: 6, height: 6,
+                      background: agent.status === "online" ? "var(--green)" : "var(--text-dim)",
                     }}
-                    className={agent.status === "online" ? "lcars-blink" : ""}
                   />
-                  <span className="lcars-data-key" style={{ color: "#aabbcc" }}>
-                    {agent.emoji} {agent.name}
-                  </span>
-                  <span
-                    className={`lcars-data-badge ${agent.status === "online" ? "online" : "idle"}`}
-                  >
+                  <span className="data-label">{agent.emoji} {agent.name}</span>
+                  <span className={`data-badge ${agent.status === "online" ? "online" : "idle"}`}>
                     {agent.status === "online" ? "ONLINE" : "IDLE"}
                   </span>
                 </div>
@@ -185,32 +207,24 @@ export default function BridgePage() {
           </div>
         </div>
 
-        {/* Channel Status Panel */}
-        <div className="lcars-panel">
-          <div className="lcars-panel-header">
-            <span className="lcars-panel-title">Channel Status</span>
-            <span className="lcars-panel-badge">
-              {channels.filter((c) => c.connected).length}/{channels.length} ACTIVE
-            </span>
+        {/* Channel Status */}
+        <div className="content-panel">
+          <div className="content-panel-header">
+            <span className="content-panel-title">Channel Status</span>
+            <span className="content-panel-badge">{channels.filter((c) => c.connected).length}/{channels.length} active</span>
           </div>
-          <div className="lcars-panel-body">
+          <div className="content-panel-body">
             {channels.map((ch) => (
-              <div key={ch.name} className="lcars-data-row">
+              <div key={ch.name} className="data-row">
                 <span
+                  className="status-dot"
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    backgroundColor: ch.connected ? ch.color : "#556677",
-                    flexShrink: 0,
+                    width: 6, height: 6,
+                    background: ch.connected ? ch.color : "var(--text-dim)",
                   }}
                 />
-                <span className="lcars-data-key" style={{ color: "#aabbcc" }}>
-                  {ch.name}
-                </span>
-                <span
-                  className={`lcars-data-badge ${ch.connected ? "online" : "offline"}`}
-                >
+                <span className="data-label">{ch.name}</span>
+                <span className={`data-badge ${ch.connected ? "connected" : "offline"}`}>
                   {ch.connected ? "CONNECTED" : "OFFLINE"}
                 </span>
               </div>
@@ -219,62 +233,33 @@ export default function BridgePage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="lcars-panel" style={{ animation: "lcars-slide-up 0.3s ease-out 0.6s both" }}>
-        <div className="lcars-panel-header">
-          <span className="lcars-panel-title">Recent Activity</span>
-          <Link
-            href="/activity"
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: 8,
-              letterSpacing: "0.1em",
-              color: "#ff6600",
-              textDecoration: "none",
-              textTransform: "uppercase",
-            }}
-          >
-            Full Log
-          </Link>
+      {/* ── RECENT ACTIVITY ───────────────────────────── */}
+      <div className="content-panel">
+        <div className="content-panel-header">
+          <span className="content-panel-title">Recent Activity</span>
+          <Link href="/activity" className="content-panel-link">Full Log</Link>
         </div>
-        <div className="lcars-panel-body">
+        <div className="content-panel-body">
           {activities.length === 0 ? (
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#556677", padding: "6px 0" }}>
+            <div style={{ fontSize: 11, color: "var(--text-dim)", padding: "6px 0", fontFamily: "var(--font-mono)" }}>
               NO RECENT ACTIVITY
             </div>
           ) : (
             activities.slice(0, 5).map((act) => (
-              <div key={act.id} className="lcars-data-row">
-                <span className="lcars-data-val" style={{ minWidth: 50, fontSize: 9, color: "#556677" }}>
+              <div key={act.id} className="data-row">
+                <span className="data-value" style={{ minWidth: 50, fontSize: 9, color: "var(--text-dim)" }}>
                   {timeAgo(act.created_at)}
                 </span>
-                <div
+                <span
                   style={{
-                    width: 3,
-                    height: 14,
-                    borderRadius: 1,
-                    backgroundColor:
-                      act.status === "error" ? "#cc2200" :
-                      act.status === "success" ? "#00cc66" : "#ff6600",
-                    flexShrink: 0,
+                    width: 3, height: 14, borderRadius: 1, flexShrink: 0,
+                    background: act.status === "error" ? "#cc2200" : act.status === "success" ? "var(--green)" : "var(--orange)",
                   }}
                 />
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "#aabbcc",
-                    flex: 1,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text)", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {act.description || act.type}
                 </span>
-                <span
-                  className={`lcars-data-badge ${act.status === "error" ? "offline" : act.status === "success" ? "online" : "idle"}`}
-                >
+                <span className={`data-badge ${act.status === "error" ? "error" : act.status === "success" ? "success" : "idle"}`}>
                   {act.status}
                 </span>
               </div>
@@ -283,19 +268,19 @@ export default function BridgePage() {
         </div>
       </div>
 
-      {/* System Analysis */}
-      <div className="lcars-grid-2" style={{ animation: "lcars-slide-up 0.3s ease-out 0.8s both" }}>
-        <div className="lcars-panel">
-          <div className="lcars-panel-header">
-            <span className="lcars-panel-title">System Analysis</span>
+      {/* ── SYSTEM ANALYSIS + QUICK ACCESS ────────────── */}
+      <div className="grid-2">
+        <div className="content-panel">
+          <div className="content-panel-header">
+            <span className="content-panel-title">System Analysis</span>
           </div>
-          <div className="lcars-panel-body">
+          <div className="content-panel-body">
             {[
-              { label: "Messages", key: "message", color: "#00cc66" },
+              { label: "Messages", key: "message", color: "var(--green)" },
               { label: "Commands", key: "command", color: "#9966cc" },
-              { label: "File Ops", key: "file", color: "#4499cc" },
+              { label: "File Ops", key: "file", color: "var(--blue-dot)" },
               { label: "Cron", key: "cron_run", color: "#cc4400" },
-              { label: "Search", key: "search", color: "#ff9900" },
+              { label: "Search", key: "search", color: "var(--orange)" },
             ].map(({ label, key, color }) => {
               const value = key === "file"
                 ? (stats.byType?.file_read || 0) + (stats.byType?.file_write || 0) + (stats.byType?.file || 0)
@@ -305,19 +290,15 @@ export default function BridgePage() {
               return (
                 <div key={key} style={{ marginBottom: 5 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
-                    <span style={{ fontFamily: "var(--font-heading)", fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: "#556677" }}>
-                      {label}
-                    </span>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color }}>
-                      {value}
-                    </span>
+                    <span style={{ fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-dim)" }}>{label}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color }}>{value}</span>
                   </div>
-                  <div className="lcars-progress">
+                  <div className="progress-row">
                     {Array.from({ length: segments }).map((_, i) => (
                       <div
                         key={i}
-                        className={`lcars-progress-segment ${i < filled ? "filled" : ""}`}
-                        style={i < filled ? { backgroundColor: color } : undefined}
+                        className={`progress-segment ${i < filled ? "filled" : ""}`}
+                        style={i < filled ? { background: color } : undefined}
                       />
                     ))}
                   </div>
@@ -327,39 +308,22 @@ export default function BridgePage() {
           </div>
         </div>
 
-        {/* Quick Nav */}
-        <div className="lcars-panel">
-          <div className="lcars-panel-header">
-            <span className="lcars-panel-title">Quick Access</span>
+        <div className="content-panel">
+          <div className="content-panel-header">
+            <span className="content-panel-title">Quick Access</span>
           </div>
-          <div className="lcars-panel-body" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+          <div className="content-panel-body" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
             {[
               { href: "/cron", label: "Cron Ops", color: "#cc4400" },
-              { href: "/system", label: "Engineering", color: "#00cc66" },
-              { href: "/logs", label: "Comms Log", color: "#4499cc" },
+              { href: "/system", label: "Engineering", color: "var(--green)" },
+              { href: "/logs", label: "Comms Log", color: "var(--blue-dot)" },
               { href: "/memory", label: "Memory Bank", color: "#9966cc" },
-              { href: "/skills", label: "R&D Lab", color: "#ff9900" },
-              { href: "/terminal", label: "Terminal", color: "#33aacc" },
+              { href: "/skills", label: "R&D Lab", color: "var(--orange)" },
+              { href: "/terminal", label: "Terminal", color: "var(--teal-dot)" },
             ].map(({ href, label, color }) => (
-              <Link
-                key={href}
-                href={href}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "7px 10px",
-                  borderRadius: 2,
-                  textDecoration: "none",
-                  background: "#292c36",
-                  transition: "background 0.1s",
-                }}
-                className="lcars-btn-sweep"
-              >
-                <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: color, flexShrink: 0 }} />
-                <span style={{ fontFamily: "var(--font-heading)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "#aabbcc" }}>
-                  {label}
-                </span>
+              <Link key={href} href={href} className="quick-btn">
+                <span className="quick-btn-dot" style={{ background: color }} />
+                <span className="quick-btn-label">{label}</span>
               </Link>
             ))}
           </div>

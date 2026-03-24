@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "Scotty Command Bridge — OpenClaw",
   description: "LCARS Mission Control for OpenClaw agents",
   manifest: "/manifest.json",
-  themeColor: "#000000",
+  themeColor: "#1c1e24",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -46,7 +46,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{__html:`if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js")`}} />
       </head>
-      <body className="sidebar-mini layout-fixed">
+      <body className="app-wrapper">
         {children}
       </body>
     </html>

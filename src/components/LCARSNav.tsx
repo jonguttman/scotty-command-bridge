@@ -7,61 +7,46 @@ import { useEffect, useState } from "react";
 interface NavItem {
   href: string;
   label: string;
-  icon: string;
-  badge?: number;
+  badge?: string;
 }
 
 const mainNav: NavItem[] = [
-  { href: "/", label: "Bridge", icon: "⌂" },
-  { href: "/activity", label: "Ship Log", icon: "▣" },
-  { href: "/rd-intel", label: "R&D Intel", icon: "◈" },
-  { href: "/memory-bay", label: "Memory Bay", icon: "◎" },
-  { href: "/memory", label: "Memory Bank", icon: "⬡" },
-  { href: "/skills", label: "R&D Lab", icon: "⚗" },
-  { href: "/goals", label: "Objectives", icon: "≡" },
-  { href: "/cron", label: "Cron Ops", icon: "⏱" },
-  { href: "/analytics", label: "Sensors", icon: "◉" },
+  { href: "/", label: "Dashboard" },
+  { href: "/activity", label: "Query Log" },
+];
+
+const groupNav: NavItem[] = [
+  { href: "/agents", label: "Groups", badge: "1" },
+  { href: "/analytics", label: "Clients", badge: "0" },
+  { href: "/memory", label: "Domains", badge: "0|0" },
+  { href: "/cron", label: "Lists", badge: "1" },
 ];
 
 const systemNav: NavItem[] = [
-  { href: "/agents", label: "Agents", icon: "⚙" },
-  { href: "/files", label: "Files", icon: "▤" },
-  { href: "/terminal", label: "Terminal", icon: "▶" },
-  { href: "/system", label: "Engineering", icon: "⚡" },
-  { href: "/git", label: "Helm", icon: "⎈" },
-  { href: "/logs", label: "Comms", icon: "⊞" },
+  { href: "/system", label: "Engineering" },
+  { href: "/terminal", label: "Terminal" },
+  { href: "/logs", label: "Comms" },
+  { href: "/git", label: "Helm" },
+  { href: "/files", label: "Files" },
 ];
 
 interface StatusData {
   gateway: string;
   memoryCount: number;
   cronCount: number;
+  load: string;
+  memoryPct: string;
 }
 
 export function LCARSNav() {
   const pathname = usePathname();
-  const [time, setTime] = useState("");
   const [status, setStatus] = useState<StatusData>({
     gateway: "...",
     memoryCount: 0,
     cronCount: 0,
+    load: "0.00",
+    memoryPct: "0.0",
   });
-
-  useEffect(() => {
-    const updateTime = () => {
-      setTime(
-        new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        })
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -77,89 +62,77 @@ export function LCARSNav() {
         .then((d) => (d.jobs || d.crons || []).length)
         .catch(() => 0),
     ]).then(([gateway, memoryCount, cronCount]) => {
-      setStatus((prev) => ({ ...prev, gateway, memoryCount, cronCount }));
+      setStatus((prev) => ({
+        ...prev,
+        gateway,
+        memoryCount,
+        cronCount,
+        load: "0.33 0.28 0.25",
+        memoryPct: "9.1",
+      }));
     });
   }, []);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
+  const renderNavItems = (items: NavItem[]) =>
+    items.map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={`nav-item-link ${isActive(item.href) ? "active" : ""}`}
+      >
+        <span className="nav-item-icon" />
+        <span>{item.label}</span>
+        {item.badge && <span className="nav-badge">{item.badge}</span>}
+      </Link>
+    ));
+
+  const isOnline = status.gateway === "ONLINE";
+
   return (
-    <nav className="mt-2" style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem", height: "100%" }}>
-      {/* Title + Time */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "0 0 0.4rem 0" }}>
-        <span className="lcars-sidebar-title">SCOTTY</span>
-        <span className="lcars-sidebar-time">{time}</span>
-      </div>
-
-      {/* Status panel — quaternary accent */}
-      <div className="lcars-sidebar-status">
-        <div className="lcars-status-header-row">STATUS-47C</div>
-        <div className={status.gateway === "ONLINE" ? "lcars-status-active-row" : "lcars-status-standby-row"}>
-          {status.gateway === "ONLINE" ? "ACTIVE" : "STANDBY"}
+    <nav style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%" }}>
+      {/* Status Panel */}
+      <div className="status-panel">
+        <div className="status-panel-header">STATUS_PANEL-47A</div>
+        <div className={isOnline ? "status-active-bar" : "status-standby-bar"}>
+          {isOnline ? "ACTIVE" : "STANDBY"}
         </div>
-        <div className="lcars-status-row">
-          <div className={`lcars-status-dot ${status.gateway === "ONLINE" ? "green" : "orange"}`} />
-          <span className="lcars-status-key">Gateway</span>
-          <span className="lcars-status-val">{status.gateway}</span>
+        <div className="status-row">
+          <div className={`status-dot ${isOnline ? "green" : "orange"}`} />
+          <span className="status-label">Q/Min</span>
+          <span className="status-value">0.00</span>
         </div>
-        <div className="lcars-status-row">
-          <div className="lcars-status-dot blue" />
-          <span className="lcars-status-key">Entries</span>
-          <span className="lcars-status-val">{status.memoryCount}</span>
+        <div className="status-row">
+          <div className="status-dot blue" />
+          <span className="status-label">Load</span>
+          <span className="status-value">{status.load}</span>
         </div>
-        <div className="lcars-status-row">
-          <div className="lcars-status-dot orange" />
-          <span className="lcars-status-key">Cron Jobs</span>
-          <span className="lcars-status-val">{status.cronCount}</span>
+        <div className="status-row">
+          <div className="status-dot teal" />
+          <span className="status-label">Memory</span>
+          <span className="status-value">{status.memoryPct}%</span>
         </div>
       </div>
 
-      {/* Main nav — section label right-aligned */}
-      <div className="lcars-nav-section-label">
-        <li className="nav-header" style={{ listStyle: "none" }}>Operations</li>
+      {/* Main Navigation */}
+      <div className="nav-section">
+        <div className="nav-section-header">Main</div>
+        {renderNavItems(mainNav)}
       </div>
-      <ul className="lcars-nav-panel nav nav-pills nav-sidebar flex-column sidebar-menu">
-        {mainNav.map((item) => (
-          <li key={item.href} className={`nav-item ${isActive(item.href) ? "active" : ""}`}>
-            <Link
-              href={item.href}
-              className={`lcars-nav-item nav-link ${isActive(item.href) ? "active" : ""}`}
-            >
-              <span className="lcars-nav-item-icon nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
 
-      {/* System nav */}
-      <div className="lcars-nav-section-label">
-        <li className="nav-header" style={{ listStyle: "none" }}>Systems</li>
+      {/* Group Management */}
+      <div className="nav-section">
+        <div className="nav-section-header">Group Management</div>
+        {renderNavItems(groupNav)}
       </div>
-      <ul className="lcars-nav-panel-purple nav nav-pills nav-sidebar flex-column sidebar-menu">
-        {systemNav.map((item) => (
-          <li key={item.href} className={`nav-item ${isActive(item.href) ? "active" : ""}`}>
-            <Link
-              href={item.href}
-              className={`lcars-nav-item nav-link ${isActive(item.href) ? "active" : ""}`}
-            >
-              <span className="lcars-nav-item-icon nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
 
-      {/* Bottom LCARS amber block - mirrors the top */}
-      <div style={{
-        marginTop: "auto",
-        height: "120px",
-        background: "#d4880a",
-        borderRadius: "0 0 0 80px",
-        flexShrink: 0,
-        width: "100%",
-      }} />
+      {/* Systems */}
+      <div className="nav-section">
+        <div className="nav-section-header">Systems</div>
+        {renderNavItems(systemNav)}
+      </div>
     </nav>
   );
 }

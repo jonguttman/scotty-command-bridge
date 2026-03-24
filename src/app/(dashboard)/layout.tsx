@@ -9,25 +9,30 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="lcars-root wrapper">
-      {/* Header — sits above sidebar + main */}
+    <>
       <LCARSTopBar />
+      <div className="app-body">
+        {/* Left decorative icon column */}
+        <div className="app-icon-col">
+          <div className="app-icon rust">◆</div>
+          <div className="app-icon teal">◎</div>
+          <div className="app-icon blue">⊕</div>
+          <div className="app-icon orange">◈</div>
+          <div className="app-icon green">●</div>
+        </div>
 
-      {/* Body: Sidebar | Main */}
-      <div className="lcars-body">
-        {/* Sidebar — outer creates gradient + mega bottom-left curve */}
-        <aside className="lcars-sidebar-outer main-sidebar lcars-boot-2">
-          <div className="lcars-sidebar-inner sidebar">
-            <LCARSNav />
-          </div>
+        {/* Sidebar */}
+        <aside className="app-sidebar">
+          <LCARSNav />
         </aside>
 
-        <main className="lcars-main content-wrapper">
-          <section className="lcars-content lcars-boot-4 content">
+        {/* Main content */}
+        <main className="app-main">
+          <section className="app-content">
             {children}
           </section>
         </main>
       </div>
-    </div>
+    </>
   );
 }
