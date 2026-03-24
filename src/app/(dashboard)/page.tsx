@@ -81,10 +81,10 @@ export default function BridgePage() {
   const cronCount = Object.values(stats.byType).reduce((a, b) => a + b, 0);
 
   const channels = [
-    { name: "TELEGRAM", connected: agents.some((a) => a.name?.toLowerCase().includes("telegram")), color: "#4499cc" },
+    { name: "TELEGRAM", connected: agents.some((a) => a.name?.toLowerCase().includes("telegram") || (a as any).botToken), color: "#4499cc" },
     { name: "SLACK", connected: true, color: "#9966cc" },
     { name: "IMESSAGE", connected: true, color: "#00cc66" },
-    { name: "GMAIL", connected: false, color: "#cc4400" },
+    { name: "GMAIL", connected: true, color: "#cc4400" },
   ];
 
   return (
@@ -148,11 +148,11 @@ export default function BridgePage() {
             {agents.length === 0 ? (
               <div style={{
                 fontFamily: "var(--font-heading)",
-                fontSize: 11,
-                color: "#556677",
-                padding: "16px 0",
+                fontSize: 13,
+                color: "#c89020",
+                padding: "20px 0",
                 textAlign: "center",
-                letterSpacing: "0.2em",
+                letterSpacing: "0.25em",
                 fontVariant: "small-caps",
                 fontWeight: 700,
               }}>
