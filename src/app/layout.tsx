@@ -6,17 +6,20 @@ const antonio = Antonio({
   subsets: ["latin"],
   variable: "--font-antonio",
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
   variable: "--font-space-mono",
   weight: ["400", "700"],
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,13 +42,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${antonio.variable} ${spaceMono.variable} ${jetbrainsMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{__html:`if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js")`}} />
       </head>
-      <body
-        className={`${antonio.variable} ${spaceMono.variable} ${jetbrainsMono.variable}`}
-      >
+      <body>
         {children}
       </body>
     </html>
