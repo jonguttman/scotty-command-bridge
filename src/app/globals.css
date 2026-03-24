@@ -18,7 +18,7 @@
   --chart-grid: #411e17;
   --border: rgba(0,0,0,0.3);
   --radius: 1.6rem;
-  --radius-lcars: 8rem;
+  --radius-lcars: 3.2rem;
   --font: Antonio, "Roboto Condensed", sans-serif;
   --font-mono: "Ubuntu Mono", "Courier New", monospace;
   --sidebar-width: 22.4rem;
@@ -266,18 +266,22 @@ body {
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 0.8rem var(--gap) 0.8rem calc(var(--gap) * 0.25);
+  padding: 0.8rem var(--gap) 0.8rem var(--gap);
+  margin: 0.2rem 0.6rem;
   background: transparent;
   color: var(--panel-text);
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color var(--transition);
   text-decoration: none;
-  gap: var(--gap);
+  gap: 1rem;
   position: relative;
   z-index: 2;
   border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: 100%;
 }
 
