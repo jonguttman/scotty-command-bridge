@@ -85,7 +85,7 @@ export function LCARSNav() {
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem" }}>
+    <nav className="mt-2" style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.4rem" }}>
       {/* Title + Time */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "0 0 0.4rem 0" }}>
         <span className="lcars-sidebar-title">SCOTTY</span>
@@ -116,34 +116,40 @@ export function LCARSNav() {
       </div>
 
       {/* Main nav — section label right-aligned */}
-      <div className="lcars-nav-section-label">Operations</div>
-      <div className="lcars-nav-panel">
-        {mainNav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`lcars-nav-item ${isActive(item.href) ? "active" : ""}`}
-          >
-            <span className="lcars-nav-item-icon">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+      <div className="lcars-nav-section-label">
+        <li className="nav-header" style={{ listStyle: "none" }}>Operations</li>
       </div>
+      <ul className="lcars-nav-panel nav nav-pills nav-sidebar flex-column sidebar-menu">
+        {mainNav.map((item) => (
+          <li key={item.href} className={`nav-item ${isActive(item.href) ? "active" : ""}`}>
+            <Link
+              href={item.href}
+              className={`lcars-nav-item nav-link ${isActive(item.href) ? "active" : ""}`}
+            >
+              <span className="lcars-nav-item-icon nav-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       {/* System nav */}
-      <div className="lcars-nav-section-label">Systems</div>
-      <div className="lcars-nav-panel-purple">
-        {systemNav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`lcars-nav-item ${isActive(item.href) ? "active" : ""}`}
-          >
-            <span className="lcars-nav-item-icon">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+      <div className="lcars-nav-section-label">
+        <li className="nav-header" style={{ listStyle: "none" }}>Systems</li>
       </div>
-    </div>
+      <ul className="lcars-nav-panel-purple nav nav-pills nav-sidebar flex-column sidebar-menu">
+        {systemNav.map((item) => (
+          <li key={item.href} className={`nav-item ${isActive(item.href) ? "active" : ""}`}>
+            <Link
+              href={item.href}
+              className={`lcars-nav-item nav-link ${isActive(item.href) ? "active" : ""}`}
+            >
+              <span className="lcars-nav-item-icon nav-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

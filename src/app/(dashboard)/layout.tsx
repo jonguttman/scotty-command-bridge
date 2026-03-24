@@ -9,23 +9,23 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="lcars-root">
+    <div className="lcars-root wrapper">
       {/* Header — sits above sidebar + main */}
       <LCARSTopBar />
 
       {/* Body: Sidebar | Main */}
       <div className="lcars-body">
         {/* Sidebar — outer creates gradient + mega bottom-left curve */}
-        <div className="lcars-sidebar-outer lcars-boot-2">
-          <div className="lcars-sidebar-inner">
+        <aside className="lcars-sidebar-outer main-sidebar lcars-boot-2">
+          <div className="lcars-sidebar-inner sidebar">
             <LCARSNav />
           </div>
-        </div>
+        </aside>
 
-        <main className="lcars-main">
-          <div className="lcars-content lcars-boot-4">
+        <main className="lcars-main content-wrapper">
+          <section className="lcars-content lcars-boot-4 content">
             {children}
-          </div>
+          </section>
         </main>
       </div>
     </div>

@@ -1,10 +1,83 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@import url("/lcars-picard.css");
 
 /* ============================================
    LCARS Design System — MichalSvatos Pi-hole Picard Theme
-   Based on: github.com/MichalSvatos/pi-hole-star-trek-picard
+   Using their CSS directly + our SPA layout overrides
+   Source: github.com/MichalSvatos/pi-hole-star-trek-picard
    ============================================ */
+
+/* ============================================
+   AdminLTE Class Overrides for SPA Flexbox Layout
+   The Pi-hole CSS assumes AdminLTE's fixed positioning.
+   We override these to work with our React flexbox layout.
+   ============================================ */
+
+.main-sidebar {
+  position: relative !important;
+  float: none !important;
+  height: auto !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  left: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+}
+
+.content-wrapper {
+  margin-left: 0 !important;
+  min-height: auto !important;
+}
+
+.main-header {
+  margin-left: 0 !important;
+}
+
+.main-footer {
+  margin-left: 0 !important;
+}
+
+/* Prevent Pi-hole sidebar collapse from interfering with our responsive */
+.sidebar-mini.sidebar-collapse .main-sidebar {
+  width: var(--sidebar-width) !important;
+}
+
+/* Reset Pi-hole's html font-size since our system also uses 62.5% rem base */
+html {
+  font-size: 62.5%;
+}
+
+/* Ensure our sidebar-menu nav items use our pill styling, not AdminLTE defaults */
+.sidebar-menu > li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.sidebar-menu > li > a {
+  border-radius: 16px 0 0 16px !important;
+}
+
+/* Prevent Pi-hole .navbar-nav from breaking our header layout */
+.lcars-header .navbar-nav {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lcars-header .navbar-nav .nav-item {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--color-tertiary);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+}
 
 :root {
   /* Core spacing unit */

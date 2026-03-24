@@ -46,7 +46,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{__html:`if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js")`}} />
       </head>
-      <body>
+      <body className="sidebar-mini layout-fixed">
         {children}
       </body>
     </html>
