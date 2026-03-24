@@ -33,7 +33,7 @@ export function LCARSTopBar() {
     <header className="app-header">
       <div className="app-header-left">
         <div className="app-header-dot" />
-        <span>Pi-hole</span>
+        <span>SCOTTY — NCC-1701-OC</span>
         <span style={{ fontSize: 14, opacity: 0.4 }}>□</span>
       </div>
       <div className="app-header-right">
