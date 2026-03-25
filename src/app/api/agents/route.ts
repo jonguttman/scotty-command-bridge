@@ -58,7 +58,10 @@ function getAgentDisplayInfo(agentId: string, agentConfig: any): { emoji: string
 export async function GET() {
   try {
     // Read openclaw config
-    const configPath = (process.env.OPENCLAW_DIR || "/root/.openclaw") + "/openclaw.json";
+    const defaultOpenclawDir = process.platform === 'darwin'
+      ? `${process.env.HOME || '/Users/openclaw'}/.openclaw`
+      : '/root/.openclaw';
+    const configPath = (process.env.OPENCLAW_DIR || defaultOpenclawDir) + "/openclaw.json";
     const config = JSON.parse(readFileSync(configPath, "utf-8"));
 
     // Get agents from config
