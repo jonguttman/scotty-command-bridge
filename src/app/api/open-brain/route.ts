@@ -6,7 +6,13 @@ function getSupabaseConfig() {
     "/Users/openclaw/.openclaw/workspace/memory/secrets/supabase-open-brain.json",
     "utf-8"
   );
-  return JSON.parse(raw) as { url: string; key: string };
+  const d = JSON.parse(raw);
+  // Support both { url, key } and { project_url, secret_key } formats
+  const url = d.url || d.project_url || "";
+  const key = d.key || d.secret_key || d.anon_key || d.service_role || "";
+  if (!url) throw new Error("Supabase URL not found in secrets file");
+  if (!key) throw new Error("Supabase key not found in secrets file");
+  return { url, key };
 }
 
 export async function GET(request: NextRequest) {
