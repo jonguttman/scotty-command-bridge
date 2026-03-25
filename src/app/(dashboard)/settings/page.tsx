@@ -66,43 +66,37 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div style={{ padding: "2rem" }}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
+      <div className="page-header">
         <div>
-          <h1 
-            className="text-2xl md:text-3xl font-bold mb-1 md:mb-2 flex items-center gap-2 md:gap-3"
-            style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
-          >
-            <Settings className="w-6 h-6 md:w-8 md:h-8" style={{ color: "var(--accent)" }} />
-            Settings
-          </h1>
-          <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
+          <h1 className="page-title">Settings</h1>
+          <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
             System status, integrations, and configuration
           </p>
         </div>
-
-        <button
-          onClick={handleRefresh}
-          disabled={loading}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors disabled:opacity-50 w-full sm:w-auto"
-          style={{ 
-            backgroundColor: "var(--card)", 
-            color: "var(--text-secondary)",
-            border: "1px solid var(--border)"
-          }}
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
-      </div>
-
-      {/* Last Refresh Time */}
-      {lastRefresh && (
-        <div className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
-          Last updated: {lastRefresh.toLocaleTimeString()}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {lastRefresh && (
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "#8a9ab8" }}>
+              {lastRefresh.toLocaleTimeString()}
+            </span>
+          )}
+          <button
+            onClick={handleRefresh}
+            disabled={loading}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.5rem 1rem", borderRadius: "0.5rem",
+              background: "#1a1d24", border: "1px solid rgba(255,255,255,0.06)",
+              color: "#c8cfe0", cursor: "pointer", fontSize: "0.85rem",
+              opacity: loading ? 0.5 : 1,
+            }}
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">

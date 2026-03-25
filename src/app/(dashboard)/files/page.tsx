@@ -41,20 +41,9 @@ export default function FilesPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: "0" }}>
       {/* Page header */}
-      <div style={{ padding: "24px 24px 16px 24px" }}>
-        <h1
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "24px",
-            fontWeight: 700,
-            letterSpacing: "-1px",
-            color: "var(--text-primary)",
-            marginBottom: "4px",
-          }}
-        >
-          File Browser
-        </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "var(--text-secondary)" }}>
+      <div style={{ padding: "2rem 2rem 1.2rem 2rem" }}>
+        <h1 className="page-title">File Browser</h1>
+        <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
           Browse agent workspaces and files
         </p>
       </div>

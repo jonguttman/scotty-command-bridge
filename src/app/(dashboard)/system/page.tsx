@@ -168,16 +168,16 @@ export default function SystemMonitorPage() {
   const activeServices = systemData.systemd.filter((s) => s.status === "active").length;
 
   return (
-    <div className="space-y-6">
+    <div style={{ padding: "2rem" }}>
       {/* Toast */}
       {toast && (
         <div style={{
           position: "fixed", top: "1rem", right: "1rem", zIndex: 1000,
-          padding: "0.75rem 1.25rem", borderRadius: "0.75rem",
-          backgroundColor: toast.type === "success" ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
-          border: `1px solid ${toast.type === "success" ? "var(--success)" : "var(--error)"}`,
-          color: toast.type === "success" ? "var(--success)" : "var(--error)",
-          fontSize: "0.9rem", fontWeight: 500,
+          padding: "0.75rem 1.25rem", borderRadius: "0.5rem",
+          backgroundColor: toast.type === "success" ? "rgba(11,208,138,0.15)" : "rgba(213,81,56,0.15)",
+          border: `1px solid ${toast.type === "success" ? "rgba(11,208,138,0.3)" : "rgba(213,81,56,0.3)"}`,
+          color: toast.type === "success" ? "#0bd08a" : "#ff6b6b",
+          fontSize: "0.85rem", fontWeight: 500,
           boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
         }}>
           {toast.msg}
@@ -185,26 +185,26 @@ export default function SystemMonitorPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="page-header">
         <div>
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)" }}>
-            System Monitor
-          </h1>
-          <p style={{ color: "var(--text-secondary)" }}>Real-time monitoring of server resources and services</p>
+          <h1 className="page-title">System Monitor</h1>
+          <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
+            Real-time monitoring of server resources and services
+          </p>
         </div>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(34,197,94,0.12)", color: "var(--success)" }}>
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--success)" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+          <span className="badge badge-success" style={{ gap: "0.3rem" }}>
+            <span style={{ width: "0.5rem", height: "0.5rem", borderRadius: "50%", backgroundColor: "#0bd08a", animation: "pulse-dim 2s ease-in-out infinite" }} />
             Live
           </span>
           {lastUpdated && (
-            <span className="text-xs" style={{ color: "var(--text-muted)" }}>{lastUpdated.toLocaleTimeString()}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "#8a9ab8" }}>{lastUpdated.toLocaleTimeString()}</span>
           )}
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b" style={{ borderColor: "var(--border)" }}>
+      <div className="flex gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: "2.5rem" }}>
         {[{ id: "hardware", label: "Hardware", icon: Cpu }, { id: "services", label: "Services", icon: Server }].map((tab) => {
           const Icon = tab.icon;
           const isActive = selectedTab === tab.id;
@@ -224,7 +224,7 @@ export default function SystemMonitorPage() {
 
       {/* Hardware Tab */}
       {selectedTab === "hardware" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "1.5rem" }}>
           {/* CPU */}
           <div className="p-6 rounded-xl" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
             <div className="flex items-center justify-between mb-4">

@@ -60,21 +60,18 @@ export default function AnalyticsPage() {
   )?.date || "-";
 
   return (
-    <div className="p-4 md:p-8" style={{ backgroundColor: "var(--background)", minHeight: "100vh" }}>
-      <div className="mb-4 md:mb-8">
-        <h1
-          className="text-2xl md:text-3xl font-bold mb-2"
-          style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
-        >
-          📊 Analytics
-        </h1>
-        <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
-          Insights and trends from agent activity
-        </p>
+    <div style={{ padding: "2rem", minHeight: "100vh" }}>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Analytics</h1>
+          <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
+            Insights and trends from agent activity
+          </p>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" style={{ marginBottom: "2.5rem" }}>
         <div
           className="rounded-xl p-3 md:p-4"
           style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}

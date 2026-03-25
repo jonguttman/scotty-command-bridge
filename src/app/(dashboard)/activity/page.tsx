@@ -237,41 +237,14 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="mb-4 md:mb-8 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{
-            color: 'var(--text-primary)',
-            fontFamily: 'var(--font-heading)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-          }}>
-            Activity Log
-            <span style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.375rem',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              padding: '0.25rem 0.625rem',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(11, 208, 138, 0.15)',
-              color: '#0bd08a',
-              border: '1px solid rgba(11, 208, 138, 0.3)',
-            }}>
-              <span style={{
-                width: '0.5rem',
-                height: '0.5rem',
-                borderRadius: '50%',
-                backgroundColor: '#0bd08a',
-                animation: 'pulse 2s ease-in-out infinite',
-              }} />
-              Live
-            </span>
-            <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
-          </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Complete history of agent actions</p>
+    <div style={{ padding: "2rem" }}>
+      <div className="page-header">
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <h1 className="page-title">Activity Log</h1>
+          <span className="badge badge-success" style={{ gap: "0.3rem" }}>
+            <span style={{ width: "0.5rem", height: "0.5rem", borderRadius: "50%", backgroundColor: "#0bd08a", animation: "pulse-dim 2s ease-in-out infinite" }} />
+            Live
+          </span>
         </div>
         <a
           href="/api/activities?format=csv&limit=10000"
@@ -279,9 +252,9 @@ export default function ActivityPage() {
           style={{
             display: "flex", alignItems: "center", gap: "0.5rem",
             padding: "0.5rem 1rem", borderRadius: "0.5rem",
-            backgroundColor: "var(--card)", color: "var(--text-secondary)",
-            border: "1px solid var(--border)", textDecoration: "none",
-            fontSize: "0.875rem", cursor: "pointer", marginTop: "0.25rem",
+            background: "#1a1d24", color: "#c8cfe0",
+            border: "1px solid rgba(255,255,255,0.06)", textDecoration: "none",
+            fontSize: "0.85rem", cursor: "pointer",
           }}
         >
           <Download className="w-4 h-4" />
@@ -290,14 +263,12 @@ export default function ActivityPage() {
       </div>
 
       {/* Activity Heatmap */}
-      <div className="mb-4 md:mb-6">
+      <div style={{ marginBottom: "2.5rem" }}>
         <ActivityHeatmap />
       </div>
 
       {/* Date Range Picker */}
-      <div className="p-3 md:p-4 mb-4 md:mb-6 rounded-xl" style={{ 
-        backgroundColor: 'var(--card)'
-      }}>
+      <div className="content-card" style={{ marginBottom: "1.5rem", padding: "1.2rem 1.5rem" }}>
         <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
           <Calendar className="w-4 h-4 md:w-5 md:h-5" style={{ color: 'var(--text-secondary)' }} />
           <span className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>Date Range</span>
@@ -367,9 +338,7 @@ export default function ActivityPage() {
       </div>
 
       {/* Type Filter Chips */}
-      <div className="p-3 md:p-4 mb-4 md:mb-6 rounded-xl" style={{ 
-        backgroundColor: 'var(--card)'
-      }}>
+      <div className="content-card" style={{ marginBottom: "1.5rem", padding: "1.2rem 1.5rem" }}>
         <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
           <Filter className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
           <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Filter by Type</span>
@@ -424,7 +393,7 @@ export default function ActivityPage() {
       </div>
 
       {/* Status and Sort Filters */}
-      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6">
+      <div className="flex flex-wrap items-center gap-2 md:gap-4" style={{ marginBottom: "1.5rem" }}>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
@@ -469,7 +438,7 @@ export default function ActivityPage() {
       </div>
 
       {/* Activity List */}
-      <div className="rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--card)' }}>
+      <div className="content-card" style={{ padding: 0, overflow: "hidden" }}>
         {activities.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
             <Zap className="w-12 h-12" style={{ margin: '0 auto 1rem', opacity: 0.5 }} />

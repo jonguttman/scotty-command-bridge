@@ -90,17 +90,12 @@ export default function CronJobsPage() {
   const pausedJobs = jobs.length - activeJobs;
 
   return (
-    <div className="p-4 md:p-8">
+    <div style={{ padding: "2rem" }}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 md:mb-8">
+      <div className="page-header">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-1" style={{ 
-            color: 'var(--text-primary)',
-            fontFamily: 'var(--font-heading)'
-          }}>
-            Cron Jobs
-          </h1>
-          <p className="text-sm md:text-base" style={{ color: 'var(--text-secondary)' }}>
+          <h1 className="page-title">Cron Jobs</h1>
+          <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
             Scheduled tasks from OpenClaw Gateway
           </p>
         </div>
@@ -180,7 +175,7 @@ export default function CronJobsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4" style={{ marginBottom: "2.5rem" }}>
         <div style={{
           backgroundColor: 'color-mix(in srgb, var(--card) 50%, transparent)',
           border: '1px solid var(--border)',

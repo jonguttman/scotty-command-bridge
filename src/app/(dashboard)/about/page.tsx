@@ -97,14 +97,11 @@ export default function AboutPage() {
     `AI assistant for ${ownerUsername}. Powered by OpenClaw.`;
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl">
+    <div style={{ padding: "2rem", maxWidth: "80rem" }}>
       {/* Hero Section */}
       <div
-        className="rounded-xl p-4 md:p-8 mb-6 md:mb-8"
-        style={{
-          backgroundColor: "var(--card)",
-          border: "1px solid var(--border)",
-        }}
+        className="content-card"
+        style={{ padding: "2rem", marginBottom: "2.5rem" }}
       >
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 text-center sm:text-left">
           {/* Avatar */}
@@ -130,14 +127,7 @@ export default function AboutPage() {
           {/* Info */}
           <div className="flex-1">
             <div className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 mb-2">
-              <h1
-                className="text-2xl md:text-3xl font-bold"
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  color: "var(--text-primary)",
-                  letterSpacing: "-1px",
-                }}
-              >
+              <h1 className="page-title">
                 {getAgentDisplayName()}
               </h1>
               <span
@@ -191,14 +181,11 @@ export default function AboutPage() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" style={{ marginBottom: "2.5rem" }}>
         {uptime && (
           <div
-            className="rounded-xl p-3 md:p-5 text-center"
-            style={{
-              backgroundColor: "var(--card)",
-              border: "1px solid var(--border)",
-            }}
+            className="content-card"
+            style={{ padding: "1.5rem", textAlign: "center" }}
           >
             <Clock
               className="w-5 h-5 md:w-6 md:h-6 mx-auto mb-1 md:mb-2"
@@ -295,14 +282,11 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+      <div className="grid md:grid-cols-2 gap-4 md:gap-6" style={{ marginBottom: "2.5rem" }}>
         {/* About */}
         <div
-          className="rounded-xl p-4 md:p-6"
-          style={{
-            backgroundColor: "var(--card)",
-            border: "1px solid var(--border)",
-          }}
+          className="content-card"
+          style={{ padding: "1.5rem" }}
         >
           <div className="flex items-center gap-2 mb-3 md:mb-4">
             <Heart className="w-5 h-5" style={{ color: "var(--accent)" }} />
@@ -346,11 +330,8 @@ export default function AboutPage() {
 
         {/* Personality */}
         <div
-          className="rounded-xl p-4 md:p-6"
-          style={{
-            backgroundColor: "var(--card)",
-            border: "1px solid var(--border)",
-          }}
+          className="content-card"
+          style={{ padding: "1.5rem" }}
         >
           <div className="flex items-center gap-2 mb-3 md:mb-4">
             <Sparkles className="w-5 h-5" style={{ color: "#facc15" }} />
@@ -391,7 +372,7 @@ export default function AboutPage() {
 
       {/* Philosophy */}
       <div
-        className="rounded-xl p-4 md:p-6 mb-6 md:mb-8"
+        className="rounded-xl p-4 md:p-6 mb-0"
         style={{
           backgroundColor: "var(--card)",
           border: "1px solid var(--border)",
@@ -432,7 +413,7 @@ export default function AboutPage() {
 
       {/* Skills/Capabilities */}
       <div
-        className="rounded-xl p-4 md:p-6 mb-6 md:mb-8"
+        className="rounded-xl p-4 md:p-6 mb-0"
         style={{
           backgroundColor: "var(--card)",
           border: "1px solid var(--border)",
@@ -477,11 +458,8 @@ export default function AboutPage() {
 
       {/* Footer */}
       <div
-        className="text-center py-4 md:py-6 px-4 rounded-xl"
-        style={{
-          backgroundColor: "var(--card)",
-          border: "1px solid var(--border)",
-        }}
+        className="content-card"
+        style={{ textAlign: "center", padding: "1.5rem" }}
       >
         <div className="flex items-center justify-center gap-2 mb-2">
           <Coffee

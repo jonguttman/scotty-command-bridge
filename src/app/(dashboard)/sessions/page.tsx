@@ -650,24 +650,15 @@ export default function SessionsPage() {
 
   return (
     <>
-      <div style={{ padding: "1.5rem 2rem", minHeight: "100vh" }}>
+      <div style={{ padding: "2rem", minHeight: "100vh" }}>
         {/* Header */}
-        <div style={{ marginBottom: "1.5rem" }}>
-          <h1
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "1.75rem",
-              fontWeight: 700,
-              color: "var(--text-primary)",
-              letterSpacing: "-1px",
-              marginBottom: "0.25rem",
-            }}
-          >
-            💬 Session History
-          </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
-            All OpenClaw agent sessions — main, cron, sub-agents, and chats
-          </p>
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Session History</h1>
+            <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
+              All OpenClaw agent sessions — main, cron, sub-agents, and chats
+            </p>
+          </div>
         </div>
 
         {/* Summary cards */}
@@ -676,7 +667,7 @@ export default function SessionsPage() {
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "0.75rem",
-            marginBottom: "1.5rem",
+            marginBottom: "2.5rem",
           }}
         >
           {[

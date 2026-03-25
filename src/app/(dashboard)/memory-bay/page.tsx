@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { Brain, Search, RefreshCw, Plus } from "lucide-react";
 
 interface Thought {
   id: string;
@@ -94,274 +95,137 @@ export default function MemoryBayPage() {
   };
 
   return (
-    <div className="lcars-data-bg">
-      {/* Page Title */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-          marginBottom: "24px",
-        }}
-      >
-        <div
-          style={{
-            width: "8px",
-            height: "32px",
-            backgroundColor: "var(--lcars-blue)",
-            borderRadius: "4px",
-          }}
-        />
-        <h2
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "20px",
-            fontWeight: 400,
-            letterSpacing: "0.2em",
-            color: "var(--lcars-text)",
-            textTransform: "uppercase",
-            margin: 0,
-          }}
-        >
-          Memory Bay — Open Brain Interface
-        </h2>
-        <div
-          style={{
-            flex: 1,
-            height: "2px",
-            background: "linear-gradient(90deg, var(--lcars-blue), transparent)",
-          }}
-        />
-      </div>
-
-      {/* Stats Bar */}
-      <div
-        className="lcars-card lcars-card-blue"
-        style={{ marginBottom: "20px", animation: "lcars-slide-up 0.4s ease-out 0.4s both" }}
-      >
-        <div className="lcars-card-body" style={{ padding: "10px 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-              <span
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "28px",
-                  color: "var(--lcars-blue)",
-                  lineHeight: 1,
-                }}
-              >
-                {stats.total}
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "9px",
-                  letterSpacing: "0.2em",
-                  color: "var(--lcars-text-dim)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Total Thoughts
-              </span>
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: "1px",
-                backgroundColor: "var(--lcars-blue)",
-                opacity: 0.2,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "10px",
-                color: "var(--lcars-text-dim)",
-              }}
-            >
-              {stats.lastUpdated ? `LAST UPDATE: ${timeAgo(stats.lastUpdated)}` : "—"}
-            </span>
-          </div>
+    <div style={{ padding: "2rem", maxWidth: "80rem" }}>
+      {/* Page Header */}
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Memory Bay</h1>
+          <p style={{ fontSize: "0.95rem", color: "#8a9ab8", marginTop: "0.4rem" }}>
+            Open Brain interface — search and capture thoughts
+          </p>
         </div>
-      </div>
-
-      {/* Search Bar */}
-      <div
-        style={{
-          marginBottom: "20px",
-          animation: "lcars-slide-up 0.4s ease-out 0.5s both",
-        }}
-      >
-        <div style={{ display: "flex", gap: "8px" }}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder="SEARCH MEMORY CORE"
-            style={{
-              flex: 1,
-              padding: "10px 16px",
-              backgroundColor: "var(--lcars-bg)",
-              border: "2px solid var(--lcars-amber)",
-              borderRadius: "0 20px 20px 0",
-              fontFamily: "var(--font-heading)",
-              fontSize: "13px",
-              letterSpacing: "0.15em",
-              color: "var(--lcars-text)",
-              textTransform: "uppercase",
-              outline: "none",
-            }}
-          />
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div className="stat-card-clean" style={{ padding: "0.8rem 1.2rem" }}>
+            <Brain style={{ width: "1.6rem", height: "1.6rem", color: "#0bd08a" }} />
+            <div>
+              <div className="stat-number" style={{ fontSize: "1.4rem" }}>{stats.total}</div>
+              <div className="stat-label">thoughts</div>
+            </div>
+          </div>
           <button
-            onClick={handleSearch}
+            onClick={() => fetchThoughts()}
             style={{
-              padding: "10px 24px",
-              backgroundColor: "var(--lcars-blue)",
-              border: "none",
-              borderRadius: "20px",
-              fontFamily: "var(--font-heading)",
-              fontSize: "12px",
-              letterSpacing: "0.15em",
-              color: "var(--lcars-black)",
-              textTransform: "uppercase",
-              cursor: "pointer",
-              fontWeight: 600,
+              display: "flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.5rem 1rem", borderRadius: "0.5rem",
+              background: "#1a1d24", border: "1px solid rgba(255,255,255,0.06)",
+              color: "#c8cfe0", cursor: "pointer", fontSize: "0.85rem",
             }}
           >
-            SCAN
+            <RefreshCw style={{ width: "1.4rem", height: "1.4rem" }} />
+            Refresh
           </button>
         </div>
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "40px",
-          }}
-        >
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              border: "3px solid var(--lcars-bg)",
-              borderTopColor: "var(--lcars-amber)",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-            }}
-          />
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <div
-          className="lcars-card lcars-card-rust"
-          style={{ marginBottom: "20px" }}
-        >
-          <div className="lcars-card-body" style={{ padding: "12px 16px" }}>
-            <span
+      {/* Search Bar */}
+      <div style={{ marginBottom: "2rem" }}>
+        <div style={{ display: "flex", gap: "0.6rem" }}>
+          <div style={{
+            flex: 1, display: "flex", alignItems: "center", gap: "0.8rem",
+            padding: "0.6rem 1rem", borderRadius: "0.5rem",
+            background: "#1a1d24", border: "1px solid rgba(255,255,255,0.06)",
+          }}>
+            <Search style={{ width: "1.4rem", height: "1.4rem", color: "#8a9ab8", flexShrink: 0 }} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              placeholder="Search memory..."
               style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                color: "var(--lcars-red)",
+                flex: 1, background: "none", border: "none", outline: "none",
+                fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "#e0e4f0",
               }}
-            >
-              ERROR: {error}
-            </span>
+            />
           </div>
+          <button
+            onClick={handleSearch}
+            style={{
+              padding: "0.6rem 1.5rem", borderRadius: "0.5rem",
+              background: "rgba(145,94,77,0.2)", border: "1px solid rgba(145,94,77,0.3)",
+              color: "#e0e4f0", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600,
+            }}
+          >
+            Search
+          </button>
+        </div>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="content-card" style={{
+          marginBottom: "1.5rem", background: "rgba(213,81,56,0.1)",
+          border: "1px solid rgba(213,81,56,0.2)", color: "#ff6b6b",
+          fontSize: "0.9rem",
+        }}>
+          {error}
         </div>
       )}
 
-      {/* Thought Cards */}
+      {/* Loading */}
+      {loading && (
+        <div style={{ display: "flex", justifyContent: "center", padding: "3rem" }}>
+          <div style={{
+            width: "2rem", height: "2rem",
+            border: "2px solid rgba(255,255,255,0.06)", borderTopColor: "#915e4d",
+            borderRadius: "50%", animation: "spin 0.8s linear infinite",
+          }} />
+        </div>
+      )}
+
+      {/* Thoughts */}
       {!loading && !error && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-            marginBottom: "24px",
-            animation: "lcars-slide-up 0.4s ease-out 0.6s both",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "2.5rem" }}>
+          <div className="section-label">
+            {searchQuery ? `Results for "${searchQuery}"` : "Recent thoughts"} ({thoughts.length})
+          </div>
+
           {thoughts.length === 0 ? (
-            <div
-              className="lcars-card lcars-card-blue"
-            >
-              <div className="lcars-card-body" style={{ padding: "24px 16px", textAlign: "center" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-heading)",
-                    fontSize: "13px",
-                    letterSpacing: "0.2em",
-                    color: "var(--lcars-text-dim)",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  No thoughts in memory core
-                </span>
-              </div>
+            <div className="empty-state">
+              <Brain />
+              <p>No thoughts in memory core</p>
             </div>
           ) : (
-            thoughts.map((thought, index) => {
+            thoughts.map((thought) => {
               const isExpanded = expandedId === thought.id;
               const preview =
-                thought.content.length > 100 && !isExpanded
-                  ? thought.content.slice(0, 100) + "..."
+                thought.content.length > 150 && !isExpanded
+                  ? thought.content.slice(0, 150) + "..."
                   : thought.content;
 
               return (
                 <div
                   key={thought.id}
-                  className="lcars-card lcars-card-blue"
-                  style={{
-                    cursor: "pointer",
-                    animation: `lcars-slide-up 0.3s ease-out ${0.6 + index * 0.03}s both`,
-                  }}
-                  onClick={() =>
-                    setExpandedId(isExpanded ? null : thought.id)
-                  }
+                  className="content-card"
+                  style={{ cursor: "pointer", transition: "background 0.1s" }}
+                  onClick={() => setExpandedId(isExpanded ? null : thought.id)}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#1e2129"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#1a1d24"; }}
                 >
-                  <div
-                    className="lcars-card-body"
-                    style={{ padding: "10px 16px" }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        gap: "16px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "12px",
-                          color: "var(--lcars-text)",
-                          lineHeight: 1.5,
-                          flex: 1,
-                          whiteSpace: isExpanded ? "pre-wrap" : "normal",
-                        }}
-                      >
-                        {preview}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "9px",
-                          color: "var(--lcars-text-dim)",
-                          flexShrink: 0,
-                          marginTop: "2px",
-                        }}
-                      >
-                        {timeAgo(thought.created_at)}
-                      </span>
-                    </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1.5rem" }}>
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: "0.9rem",
+                      color: "#c8cfe0", lineHeight: 1.6, flex: 1,
+                      whiteSpace: isExpanded ? "pre-wrap" : "normal",
+                    }}>
+                      {preview}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: "0.75rem",
+                      color: "#8a9ab8", flexShrink: 0,
+                    }}>
+                      {timeAgo(thought.created_at)}
+                    </span>
                   </div>
                 </div>
               );
@@ -370,60 +234,37 @@ export default function MemoryBayPage() {
         </div>
       )}
 
-      {/* New Thought Capture */}
-      <div
-        className="lcars-card lcars-card-blue"
-        style={{ animation: "lcars-slide-up 0.4s ease-out 0.8s both" }}
-      >
-        <div className="lcars-card-header">
-          <span className="lcars-card-title" style={{ color: "var(--lcars-blue)" }}>
-            Thought Capture
-          </span>
-        </div>
-        <div className="lcars-card-body" style={{ padding: "12px 16px" }}>
-          <textarea
-            value={newThought}
-            onChange={(e) => setNewThought(e.target.value)}
-            placeholder="ENTER NEW THOUGHT FOR MEMORY CORE..."
-            rows={3}
+      {/* Thought Capture */}
+      <div className="content-card">
+        <div className="section-label" style={{ marginBottom: "0.8rem" }}>Capture new thought</div>
+        <textarea
+          value={newThought}
+          onChange={(e) => setNewThought(e.target.value)}
+          placeholder="Enter a new thought..."
+          rows={3}
+          style={{
+            width: "100%", padding: "0.8rem 1rem", borderRadius: "0.5rem",
+            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+            fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "#e0e4f0",
+            resize: "vertical", outline: "none", marginBottom: "0.8rem", lineHeight: 1.6,
+          }}
+        />
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button
+            onClick={handleCapture}
+            disabled={capturing || !newThought.trim()}
             style={{
-              width: "100%",
-              padding: "10px 12px",
-              backgroundColor: "var(--lcars-bg)",
-              border: "1px solid var(--lcars-blue)",
-              borderRadius: "8px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--lcars-text)",
-              resize: "vertical",
-              outline: "none",
-              marginBottom: "10px",
+              display: "flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.5rem 1.5rem", borderRadius: "0.5rem",
+              background: capturing ? "#8a9ab8" : "#915e4d",
+              border: "none", color: "#e0e4f0", cursor: capturing ? "wait" : "pointer",
+              fontSize: "0.85rem", fontWeight: 600,
+              opacity: !newThought.trim() ? 0.5 : 1,
             }}
-          />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              onClick={handleCapture}
-              disabled={capturing || !newThought.trim()}
-              style={{
-                padding: "8px 28px",
-                backgroundColor: capturing
-                  ? "var(--lcars-text-dim)"
-                  : "var(--lcars-blue)",
-                border: "none",
-                borderRadius: "20px",
-                fontFamily: "var(--font-heading)",
-                fontSize: "12px",
-                letterSpacing: "0.15em",
-                color: "var(--lcars-black)",
-                textTransform: "uppercase",
-                cursor: capturing ? "wait" : "pointer",
-                fontWeight: 600,
-                opacity: !newThought.trim() ? 0.5 : 1,
-              }}
-            >
-              {capturing ? "CAPTURING..." : "CAPTURE"}
-            </button>
-          </div>
+          >
+            <Plus style={{ width: "1.4rem", height: "1.4rem" }} />
+            {capturing ? "Saving..." : "Capture"}
+          </button>
         </div>
       </div>
     </div>
