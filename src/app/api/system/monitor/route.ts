@@ -85,22 +85,33 @@ export async function GET() {
     let diskUsed = 0;
     let diskFree = 100;
     try {
-      const { stdout } = await execAsync("df -BG / | tail -1");
+      const isMac = process.platform === 'darwin';
+      // macOS: df -g /  Linux: df -BG /
+      const dfCmd = isMac ? "df -g / | tail -1" : "df -BG / | tail -1";
+      const { stdout } = await execAsync(dfCmd);
       const parts = stdout.trim().split(/\s+/);
-      diskTotal = parseInt(parts[1].replace("G", ""));
-      diskUsed = parseInt(parts[2].replace("G", ""));
-      diskFree = parseInt(parts[3].replace("G", ""));
+      if (isMac) {
+        // macOS df -g format: Filesystem 512-blocks Used Available Capacity iused ifree %iused Mounted
+        // parts[1]=512-blocks, parts[2]=Used, parts[3]=Available (all in 512-byte blocks when -g)
+        // Actually macOS df -g: 1G-blocks Used Available Capacity ...
+        diskTotal = parseInt(parts[1]) || 100;
+        diskUsed = parseInt(parts[2]) || 0;
+        diskFree = parseInt(parts[3]) || 100;
+      } else {
+        diskTotal = parseInt(parts[1].replace("G", "")) || 100;
+        diskUsed = parseInt(parts[2].replace("G", "")) || 0;
+        diskFree = parseInt(parts[3].replace("G", "")) || 100;
+      }
     } catch (error) {
       console.error("Failed to get disk stats:", error);
     }
-    const diskPercent = (diskUsed / diskTotal) * 100;
+    const diskPercent = diskTotal > 0 ? (diskUsed / diskTotal) * 100 : 0;
 
-    // ── Network (real stats from /proc/net/dev) ───────────────────────────────
+    // ── Network ───────────────────────────────────────────────────────────────
     let network = { rx: 0, tx: 0 };
     try {
-      const { readFileSync } = await import('fs');
-      
-      function readNetStats(): { rx: number; tx: number; ts: number } {
+      if (process.platform === 'linux') {
+        const { readFileSync } = await import('fs');
         const netDev = readFileSync('/proc/net/dev', 'utf-8');
         const lines = netDev.trim().split('\n').slice(2);
         let rx = 0, tx = 0;
@@ -111,23 +122,35 @@ export async function GET() {
           rx += parseInt(parts[1]) || 0;
           tx += parseInt(parts[9]) || 0;
         }
-        return { rx, tx, ts: Date.now() };
-      }
-      
-      const current = readNetStats();
-      
-      // Use module-level cache for previous reading
-      if ((global as Record<string, unknown>).__netPrev) {
-        const prev = (global as Record<string, unknown>).__netPrev as { rx: number; tx: number; ts: number };
-        const dtSec = (current.ts - prev.ts) / 1000;
-        if (dtSec > 0) {
-          network = {
-            rx: parseFloat(Math.max(0, (current.rx - prev.rx) / 1024 / 1024 / dtSec).toFixed(3)),
-            tx: parseFloat(Math.max(0, (current.tx - prev.tx) / 1024 / 1024 / dtSec).toFixed(3)),
-          };
+        const current = { rx, tx, ts: Date.now() };
+        if ((global as Record<string, unknown>).__netPrev) {
+          const prev = (global as Record<string, unknown>).__netPrev as { rx: number; tx: number; ts: number };
+          const dtSec = (current.ts - prev.ts) / 1000;
+          if (dtSec > 0) {
+            network = {
+              rx: parseFloat(Math.max(0, (current.rx - prev.rx) / 1024 / 1024 / dtSec).toFixed(3)),
+              tx: parseFloat(Math.max(0, (current.tx - prev.tx) / 1024 / 1024 / dtSec).toFixed(3)),
+            };
+          }
         }
+        (global as Record<string, unknown>).__netPrev = current;
+      } else if (process.platform === 'darwin') {
+        // macOS: use netstat to get total bytes
+        const { stdout: nsOut } = await execAsync("netstat -ibn | awk 'NR>1 && $1 !~ /lo/ && $1 !~ /Name/ {rx+=$7; tx+=$10} END {print rx, tx}'");
+        const [rx, tx] = nsOut.trim().split(/\s+/).map(Number);
+        const current = { rx: rx || 0, tx: tx || 0, ts: Date.now() };
+        if ((global as Record<string, unknown>).__netPrev) {
+          const prev = (global as Record<string, unknown>).__netPrev as { rx: number; tx: number; ts: number };
+          const dtSec = (current.ts - prev.ts) / 1000;
+          if (dtSec > 0) {
+            network = {
+              rx: parseFloat(Math.max(0, (current.rx - prev.rx) / 1024 / 1024 / dtSec).toFixed(3)),
+              tx: parseFloat(Math.max(0, (current.tx - prev.tx) / 1024 / 1024 / dtSec).toFixed(3)),
+            };
+          }
+        }
+        (global as Record<string, unknown>).__netPrev = current;
       }
-      (global as Record<string, unknown>).__netPrev = current;
     } catch (error) {
       console.error("Failed to get network stats:", error);
     }
@@ -135,11 +158,20 @@ export async function GET() {
     // ── Services ─────────────────────────────────────────────────────────────
     const services: ServiceEntry[] = [];
 
-    // 1. Systemd services
+    // 1. Systemd services (Linux only)
     for (const name of SYSTEMD_SERVICES) {
+      if (process.platform !== 'linux') {
+        services.push({
+          name,
+          status: "not_applicable",
+          description: SERVICE_DESCRIPTIONS[name] ?? name,
+          backend: "systemd",
+        });
+        continue;
+      }
       try {
         const { stdout } = await execAsync(`systemctl is-active ${name} 2>/dev/null || true`);
-        const rawStatus = stdout.trim(); // "active" | "inactive" | "failed" | ...
+        const rawStatus = stdout.trim();
         services.push({
           name,
           status: rawStatus,
@@ -156,8 +188,9 @@ export async function GET() {
       }
     }
 
-    // 2. PM2 services — single call, parse JSON
+    // 2. PM2 services — single call, parse JSON (Linux only; skip gracefully on macOS)
     try {
+      if (process.platform !== 'linux') throw new Error('PM2 not applicable on macOS');
       const { stdout: pm2Json } = await execAsync("pm2 jlist 2>/dev/null");
       const pm2List = JSON.parse(pm2Json) as Array<{
         name: string;
@@ -206,12 +239,12 @@ export async function GET() {
         });
       }
     } catch (err) {
-      console.error("Failed to query PM2:", err);
-      // Fallback: mark all PM2 services as unknown
+      if (process.platform === 'linux') console.error("Failed to query PM2:", err);
+      // On macOS or when PM2 unavailable, mark as not_applicable
       for (const name of PM2_SERVICES) {
         services.push({
           name,
-          status: "unknown",
+          status: process.platform === 'darwin' ? "not_applicable" : "unknown",
           description: SERVICE_DESCRIPTIONS[name] ?? name,
           backend: "pm2",
         });
