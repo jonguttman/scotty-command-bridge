@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { logActivity } from '@/lib/activities-db';
 
 const OPENCLAW_DIR = process.env.OPENCLAW_DIR || '/root/.openclaw';
 const WORKSPACE = path.join(OPENCLAW_DIR, 'workspace');
@@ -97,6 +98,10 @@ export async function GET(request: NextRequest) {
     const sorted = results
       .filter(Boolean)
       .sort((a, b) => (b?.matches || 0) - (a?.matches || 0)) as SearchResult[];
+
+    logActivity('memory', `Memory search: "${query}" (${sorted.length} results)`, 'success', {
+      metadata: { query, resultCount: sorted.length },
+    });
 
     return NextResponse.json({ results: sorted.slice(0, 20), query, total: sorted.length });
   } catch (error) {

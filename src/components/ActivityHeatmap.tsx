@@ -34,7 +34,17 @@ export function ActivityHeatmap() {
   useEffect(() => {
     fetch("/api/activities/stats")
       .then((r) => r.json())
-      .then((data) => { setStats(data); setLoading(false); })
+      .then((data) => {
+        setStats({
+          total: typeof data?.total === "number" ? data.total : 0,
+          today: typeof data?.today === "number" ? data.today : 0,
+          heatmap: Array.isArray(data?.heatmap) ? data.heatmap : [],
+          byType: data?.byType && typeof data.byType === "object" ? data.byType : {},
+          byStatus: data?.byStatus && typeof data.byStatus === "object" ? data.byStatus : {},
+          trend: Array.isArray(data?.trend) ? data.trend : [],
+        });
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -48,12 +58,19 @@ export function ActivityHeatmap() {
     );
   }
 
-  if (!stats) return null;
+  if (!stats || !Array.isArray(stats.heatmap)) {
+    return (
+      <div style={{ padding: "1.5rem", backgroundColor: "var(--card)", borderRadius: "0.75rem", border: "1px solid var(--border)" }}>
+        <div style={{ height: "100px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          No activity data yet.
+        </div>
+      </div>
+    );
+  }
 
   // Build 52-week grid
   const today = new Date();
   const startDay = subDays(today, 364);
-  const days = eachDayOfInterval({ start: startDay, end: today });
   
   // Pad to start from Sunday
   const firstDayOfWeek = startOfWeek(startDay, { weekStartsOn: 0 });

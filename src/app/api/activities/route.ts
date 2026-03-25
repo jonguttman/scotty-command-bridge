@@ -44,7 +44,14 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Failed to get activities:', error);
-    return NextResponse.json({ error: 'Failed to get activities' }, { status: 500 });
+    return NextResponse.json({
+      activities: [],
+      total: 0,
+      limit: 0,
+      offset: 0,
+      hasMore: false,
+      error: 'Failed to get activities'
+    }, { status: 200 });
   }
 }
 

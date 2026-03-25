@@ -374,11 +374,14 @@ export default function BridgePage() {
                   const opus = 15 + Math.cos(i * 0.6) * 10;
                   const qwen = 8 + Math.sin(i * 1.2) * 5;
                   const total = sonnet + opus + qwen;
+                  const qwenHeight = Number(((qwen / total) * (total / 80) * 100).toFixed(3));
+                  const opusHeight = Number(((opus / total) * (total / 80) * 100).toFixed(3));
+                  const sonnetHeight = Number(((sonnet / total) * (total / 80) * 100).toFixed(3));
                   return (
                     <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", height: "100%" }}>
-                      <div style={{ height: `${(qwen / total) * (total / 80) * 100}%`, background: "#33aacc", opacity: 0.85, minHeight: "1px" }} title={`Qwen: ${Math.round(qwen)}k`} />
-                      <div style={{ height: `${(opus / total) * (total / 80) * 100}%`, background: "#9966cc", opacity: 0.85, minHeight: "1px" }} title={`Opus: ${Math.round(opus)}k`} />
-                      <div style={{ height: `${(sonnet / total) * (total / 80) * 100}%`, background: "#d4690a", opacity: 0.85, borderRadius: "1px 1px 0 0", minHeight: "1px" }} title={`Sonnet: ${Math.round(sonnet)}k`} />
+                      <div style={{ height: `${qwenHeight}%`, background: "#33aacc", opacity: 0.85, minHeight: "1px" }} title={`Qwen: ${Math.round(qwen)}k`} />
+                      <div style={{ height: `${opusHeight}%`, background: "#9966cc", opacity: 0.85, minHeight: "1px" }} title={`Opus: ${Math.round(opus)}k`} />
+                      <div style={{ height: `${sonnetHeight}%`, background: "#d4690a", opacity: 0.85, borderRadius: "1px 1px 0 0", minHeight: "1px" }} title={`Sonnet: ${Math.round(sonnet)}k`} />
                     </div>
                   );
                 })}

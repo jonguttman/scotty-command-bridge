@@ -150,21 +150,22 @@ export default function ActivityPage() {
 
       const res = await fetch(`/api/activities?${params.toString()}`);
       const data: ActivitiesResponse = await res.json();
+      const activities = Array.isArray(data?.activities) ? data.activities : [];
       
-      let filteredActivities = data.activities;
+      let filteredActivities = activities;
       if (selectedTypes.size > 1) {
-        filteredActivities = data.activities.filter((a) => selectedTypes.has(a.type));
+        filteredActivities = activities.filter((a) => selectedTypes.has(a.type));
       }
       
       if (append) {
-        setActivities((prev) => [...prev, ...filteredActivities]);
+        setActivities((prev = []) => [...(Array.isArray(prev) ? prev : []), ...filteredActivities]);
       } else {
         setActivities(filteredActivities);
       }
       
-      setTotal(data.total);
-      setHasMore(data.hasMore);
-      setOffset(currentOffset + data.activities.length);
+      setTotal(typeof data?.total === "number" ? data.total : filteredActivities.length);
+      setHasMore(Boolean(data?.hasMore));
+      setOffset(currentOffset + activities.length);
     } catch (error) {
       console.error("Failed to fetch activities:", error);
       if (!append) {
@@ -239,11 +240,36 @@ export default function ActivityPage() {
     <div className="p-4 md:p-8">
       <div className="mb-4 md:mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ 
+          <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{
             color: 'var(--text-primary)',
-            fontFamily: 'var(--font-heading)'
+            fontFamily: 'var(--font-heading)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
           }}>
             Activity Log
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              padding: '0.25rem 0.625rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(11, 208, 138, 0.15)',
+              color: '#0bd08a',
+              border: '1px solid rgba(11, 208, 138, 0.3)',
+            }}>
+              <span style={{
+                width: '0.5rem',
+                height: '0.5rem',
+                borderRadius: '50%',
+                backgroundColor: '#0bd08a',
+                animation: 'pulse 2s ease-in-out infinite',
+              }} />
+              Live
+            </span>
+            <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
           </h1>
           <p style={{ color: 'var(--text-secondary)' }}>Complete history of agent actions</p>
         </div>
@@ -447,7 +473,7 @@ export default function ActivityPage() {
         {activities.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
             <Zap className="w-12 h-12" style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-            <p>No activities found</p>
+            <p>No activities recorded yet. Activity logging is live — events will appear as they happen.</p>
           </div>
         )}
 

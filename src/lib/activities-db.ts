@@ -145,6 +145,75 @@ export function logActivity(
   return { id, timestamp, type, description, status, duration_ms: opts?.duration_ms ?? null, tokens_used: opts?.tokens_used ?? null, agent: opts?.agent ?? null, metadata: opts?.metadata ?? null };
 }
 
+export function logActivityWithTimestamp(
+  type: string,
+  description: string,
+  status: string,
+  timestamp: string,
+  opts?: {
+    duration_ms?: number | null;
+    tokens_used?: number | null;
+    agent?: string | null;
+    metadata?: Record<string, unknown> | null;
+  }
+): Activity {
+  const db = getDb();
+  const id = randomUUID();
+
+  db.prepare(`
+    INSERT INTO activities (id, timestamp, type, description, status, duration_ms, tokens_used, agent, metadata)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    id,
+    timestamp,
+    type,
+    description,
+    status,
+    opts?.duration_ms ?? null,
+    opts?.tokens_used ?? null,
+    opts?.agent ?? null,
+    opts?.metadata ? JSON.stringify(opts.metadata) : null,
+  );
+
+  return { id, timestamp, type, description, status, duration_ms: opts?.duration_ms ?? null, tokens_used: opts?.tokens_used ?? null, agent: opts?.agent ?? null, metadata: opts?.metadata ?? null };
+}
+
+export function bulkInsertActivities(
+  activities: Array<{
+    type: string;
+    description: string;
+    status: string;
+    timestamp: string;
+    agent?: string | null;
+    metadata?: Record<string, unknown> | null;
+  }>
+): number {
+  const db = getDb();
+  const insert = db.prepare(`
+    INSERT INTO activities (id, timestamp, type, description, status, duration_ms, tokens_used, agent, metadata)
+    VALUES (?, ?, ?, ?, ?, NULL, NULL, ?, ?)
+  `);
+
+  const insertMany = db.transaction((items: typeof activities) => {
+    let count = 0;
+    for (const a of items) {
+      insert.run(
+        randomUUID(),
+        a.timestamp,
+        a.type,
+        a.description,
+        a.status,
+        a.agent ?? null,
+        a.metadata ? JSON.stringify(a.metadata) : null,
+      );
+      count++;
+    }
+    return count;
+  });
+
+  return insertMany(activities);
+}
+
 export function updateActivity(
   id: string,
   status: string,

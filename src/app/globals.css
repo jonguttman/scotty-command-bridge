@@ -21,6 +21,18 @@
   --radius-lcars: 3.2rem;
   --font: Antonio, "Roboto Condensed", sans-serif;
   --font-mono: "Ubuntu Mono", "Courier New", monospace;
+
+  /* Activity type colors */
+  --type-message: #4488ff;
+  --type-cron: #9966cc;
+  --type-task: #33aacc;
+  --type-command: #d4690a;
+  --type-file: #8a9ab8;
+  --type-memory: #0bd08a;
+  --type-security: #cc4444;
+  --type-search: #d4690a;
+  --type-build: #915e4d;
+
   --sidebar-width: 25rem;
   --header-height: 5rem;
   --transition: 0.6s cubic-bezier(0.33, 1, 0.68, 1);
